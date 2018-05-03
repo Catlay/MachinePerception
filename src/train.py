@@ -26,11 +26,14 @@ def get_model_and_placeholders(config):
     target_pl = tf.placeholder(tf.float32, shape=[None, None, output_dim], name='input_pl')
     seq_lengths_pl = tf.placeholder(tf.int32, shape=[None], name='seq_lengths_pl')
     mask_pl = tf.placeholder(tf.float32, shape=[None, None], name='mask_pl')
+    state_1=tf.placeholder(tf.float32,[config['batch_size'],config['hidden_states']],name='state_1')
+    state_2=tf.placeholder(tf.float32,[config['batch_size'],config['hidden_states']],name='state_2')
 
     placeholders = {'input_pl': input_pl,
                     'target_pl': target_pl,
                     'seq_lengths_pl': seq_lengths_pl,
-                    'mask_pl': mask_pl}
+                    'mask_pl': mask_pl,
+                    'state_1': state_1,'state_2':state_2 }
 
     rnn_model_class = RNNModel
     return rnn_model_class, placeholders
@@ -83,8 +86,12 @@ def main(config):
 
         # TODO choose the optimizer you desire here and define `train_op. The loss should be accessible through rnn_model.loss
         params = tf.trainable_variables()
-        train_op = None
-
+          # train_op = None
+        train_op= tf.train.AdamOptimizer(lr)
+        gradients,variables= zip(*train_op.compute_gradients(rnn_model.loss))
+        gradients ,_  = tf.clip_by_global_norm(gradients,25)
+        optimize= train_op.apply_gradients(zip(gradients,variables))
+        print('optimization params done')
     # create a graph for validation
     with tf.name_scope('validation'):
         rnn_model_valid = rnn_model_class(config, placeholders, mode='validation')
@@ -145,21 +152,24 @@ def main(config):
                 # we want to train, so must request at least the train_op
                 fetches = {'summaries': summaries_training,
                            'loss': rnn_model.loss,
-                           'train_op': train_op}
+                           'train_op': optimize}
 
                 # get the feed dict for the current batch
                 feed_dict = rnn_model.get_feed_dict(batch)
-
+                print('feed dict done')
+                print('step',current_step)
+                print(batch)
+                print('training to start')
                 # feed data into the model and run optimization
                 training_out = sess.run(fetches, feed_dict)
-
+                print('training donee')
                 # write logs
                 train_summary_writer.add_summary(training_out['summaries'], global_step=step)
 
                 # print training performance of this batch onto console
                 time_delta = str(datetime.timedelta(seconds=int(time.time() - start_time)))
-                print('\rEpoch: {:3d} [{:4d}/{:4d}] time: {:>8} loss: {:.4f}'.format(
-                    e + 1, i + 1, data_train.n_batches, time_delta, training_out['loss']), end='')
+                # print('\rEpoch: {:3d} [{:4d}/{:4d}] time: {:>8} loss: {:.4f}'.format(
+                     #e + 1, i + 1, data_train.n_batches, time_delta, training_out['loss']), end='')
 
             # after every epoch evaluate the performance on the validation set
             total_valid_loss = 0.0
