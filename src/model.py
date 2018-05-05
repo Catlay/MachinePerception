@@ -69,15 +69,16 @@ class RNNModel(object):
             outputs_all=[]
          
             state=self.state_1, self.state_2
-           
+            print('Max seq lenght',self.config['max_seq_length'])
             for i in range(self.config['max_seq_length']):
+              print(i)
               if i>0:
                tf.get_variable_scope().reuse_variables()
               output,state=lstm(self.input_[:,i,:],state)
               
               outputs_all.append(output)
             self.final_state=state
-         
+              #print ('State Final is',self.final_state.h.get_shape())
             print ('outputs all',len(outputs_all))
             outputs_all_stacked=tf.stack(outputs_all,axis=1)
             print ('outputunrst',outputs_all_stacked.get_shape())
@@ -114,6 +115,8 @@ class RNNModel(object):
               #  self.loss = tf.reduce_sum(loss)
                 
                 error= (self.target-self.predictions) 
+                self.mask.get_shape()
+              #   error=tf.where(self.mask=0,error[:,:])
                 print('error  ', error.get_shape())
                 self.loss=tf.nn.l2_loss(error)
                 print('error  ', self.loss.get_shape())
@@ -148,5 +151,5 @@ class RNNModel(object):
                      self.mask: batch.mask,
                      self.state_1: initial_state_,
                      self.state_2: initial_state_}
-
+        
         return feed_dict
