@@ -29,6 +29,7 @@ def main(config):
             ckpt_path = tf.train.latest_checkpoint(config['model_dir'])
         else:
             ckpt_path = os.path.join(os.path.abspath(config['model_dir']), 'model-{}'.format(ckpt_id))
+        print('Checkpointid ',ckpt_path)
         print('Evaluating ' + ckpt_path)
         saver.restore(sess, ckpt_path)
 
@@ -36,6 +37,9 @@ def main(config):
         seeds = []
         predictions = []
         ids = []
+        print(config['batch_size'])
+        print(config['hidden_states'])
+        initial_state=np.zeros([config['batch_size'], config['hidden_states']])
         for batch in data_test.all_batches():
 
             # initialize the RNN with the known sequence (here 2 seconds)
@@ -47,10 +51,12 @@ def main(config):
             # this is why the model should have a member `self.final_state`
             fetch = [rnn_model.final_state]
             feed_dict = {placeholders['input_pl']: input_,
-                         placeholders['seq_lengths_pl']: batch.seq_lengths}
+                         placeholders['seq_lengths_pl']: batch.seq_lengths,
+                         placeholders['state_1']:initial_state, 
+                         placeholders['state_2']:initial_state}
 
             [state] = sess.run(fetch, feed_dict)
-
+            
             # now get the prediction by predicting one pose at a time and feeding this pose back into the model to
             # get the prediction for the subsequent time step
             next_pose = input_[:, -1:]
@@ -62,9 +68,9 @@ def main(config):
                 #   2) feed the previous output pose of the model as the new input (single frame only)
                 #   3) fetch both the final state and prediction of the RNN model that are then re-used in the next
                 #      iteration
-
-                fetch = None
-                feed_dict = None
+                state_array=np.array(state)
+                fetch = {rnn_model.final_state,rnn_model.predictions}
+                feed_dict = {placeholders['input_pl']:next_pose,placeholders['state_1']:state_array[0],placeholders['state_2']:state_array[1]}
 
                 [state, predicted_pose] = sess.run(fetch, feed_dict)
 
