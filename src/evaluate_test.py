@@ -11,7 +11,8 @@ from train import load_data, get_model_and_placeholders
 def main(config):
     # load the data
     data_test = load_data(config, 'test')
-
+    
+    print('Size of input',data_test.input_[0].shape[0])
     config['input_dim'] = config['output_dim'] = data_test.input_[0].shape[-1]
     rnn_model, placeholders = get_model_and_placeholders(config)
 
@@ -39,27 +40,51 @@ def main(config):
         ids = []
         print(config['batch_size'])
         print(config['hidden_states'])
-        initial_state=np.zeros([config['batch_size'], config['hidden_states']])
+        initial_state=np.zeros([1, config['hidden_states']])
+        j=0
+        
         for batch in data_test.all_batches():
-
+            
+         ids.extend(batch.ids)
+         print('Extended with',len(ids))
+         j=j+1
+         input_all = np.array(batch.input_)
+         seeds.append(input_all)
+         
+         seq_leng = np.array(batch.seq_lengths)
+         print('seq len all',seq_leng.shape)
+         for i in range(batch.batch_size):
             # initialize the RNN with the known sequence (here 2 seconds)
             # no need to pad the batch because in the test set all batches have the same length
-            input_ = np.array(batch.input_)
-            seeds.append(input_)
+            input_=input_all[i]
 
+            print('Input shape',input_.shape)
+           
+            print('shape seq',seq_leng[i].size)
+            print('type',len([input_[0]]))
             # here we are requesting the final state as we later want to supply this back into the RNN
             # this is why the model should have a member `self.final_state`
-            fetch = [rnn_model.final_state]
-            feed_dict = {placeholders['input_pl']: input_,
-                         placeholders['seq_lengths_pl']: batch.seq_lengths,
+            fetch = [rnn_model.final_state,rnn_model.predictions]
+            feed_dict = {placeholders['input_pl']: [[input_[0]]],
+                         placeholders['seq_lengths_pl']: [1],
                          placeholders['state_1']:initial_state, 
                          placeholders['state_2']:initial_state}
 
-            [state] = sess.run(fetch, feed_dict)
-            
+            [state,predictions_] = sess.run(fetch, feed_dict)
+            print(input_[1:][:].shape)
+            for frame in range(len(input_[1:][:])):
+             state_array=np.array(state) 
+             fetch = [rnn_model.final_state,rnn_model.predictions]
+             feed_dict = {placeholders['input_pl']: [[input_[frame]]],
+                         placeholders['seq_lengths_pl']: [1],
+                         placeholders['state_1']:state_array[0], 
+                         placeholders['state_2']:state_array[1]}
+
+             [state,predictions_] = sess.run(fetch, feed_dict)
             # now get the prediction by predicting one pose at a time and feeding this pose back into the model to
             # get the prediction for the subsequent time step
-            next_pose = input_[:, -1:]
+            next_pose = predictions_
+            
             predicted_poses = []
             for f in range(config['prediction_length']):
                 # TODO evaluate your model here frame-by-frame
@@ -69,22 +94,31 @@ def main(config):
                 #   3) fetch both the final state and prediction of the RNN model that are then re-used in the next
                 #      iteration
                 state_array=np.array(state)
-                fetch = {rnn_model.final_state,rnn_model.predictions}
-                feed_dict = {placeholders['input_pl']:next_pose,placeholders['state_1']:state_array[0],placeholders['state_2']:state_array[1]}
-
+                print('Shape of state array',state_array.shape)
+                print('integer trying',next_pose.shape[1])
+                fetch = [rnn_model.final_state,rnn_model.predictions]
+               
+                feed_dict = {placeholders['input_pl']:next_pose,placeholders['seq_lengths_pl']: [1],placeholders['state_1']:state_array[0],placeholders['state_2']:state_array[1]}
+                print('State dim0', state_array[0].shape)
+                print('State dim0', state_array[1].shape)
+                print('State is', state_array)
+                print('next  pose is', next_pose)
                 [state, predicted_pose] = sess.run(fetch, feed_dict)
-
+                print('pred pose is', predicted_pose)
                 predicted_poses.append(np.copy(predicted_pose))
                 next_pose = predicted_pose
-
+                    
             predicted_poses = np.concatenate(predicted_poses, axis=1)
-
+            print('shape', predicted_poses.shape)
             predictions.append(predicted_poses)
-            ids.extend(batch.ids)
-
+            
+        print('Bstchids',len(ids))
+        print('J is',j)
+        print('ALl predictions are1',len(predictions))
         seeds = np.concatenate(seeds, axis=0)
         predictions = np.concatenate(predictions, axis=0)
-
+    print('Extended with',len(ids))
+    print('ALl predictions are',predictions.shape)
 
     # the predictions are now stored in test_predictions, you can do with them what you want
     # for example, visualize a random entry
@@ -96,6 +130,8 @@ def main(config):
     model_name = config['model_dir'].split('/')[-1]
     model_name = config['model_dir'].split('/')[-2] if model_name == '' else model_name
     output_file = os.path.join(config['model_dir'], 'submit_to_kaggle_{}_{}.csv'.format(config['prediction_length'], model_name))
+    print(predictions.shape)
+    print(len(ids))
     export_to_csv(predictions, ids, output_file)
 
 
