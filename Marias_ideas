@@ -1,0 +1,12 @@
+Possible ideas to make it better
+
+1. Do scaling of data ase don mean and std. so data new to be in scale -1 to 1,( x-mean/std)
+2. Add gaussian noise in the input, maybe 2-3 times less than the std of real data and 0 mean?
+3. Implement the encoder-decoder of friagkiadaki, with step2 and FC networks
+
+4. Regarding tuning htese are my ideas:
+
+1. Config: n_epochs, play wiht this, to be sth more than 2-3
+2. Config:  Learning rate, to be sth smaller than 0.003, its importnat hyperparameter
+3. Config: Lemgth max of input ot be sth more than 600.
+4. Code: Clipping of gradients in the code.
