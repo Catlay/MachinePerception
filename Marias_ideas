@@ -14,4 +14,4 @@ Possible ideas to make it better
 Discussion:
 1. Change loss type -> what else? cosine distance
 2. Use activity labelling
-3. 
+3. Runs in 10min on local computer - why azure account?
