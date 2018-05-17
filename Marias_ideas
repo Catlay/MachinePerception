@@ -10,3 +10,8 @@ Possible ideas to make it better
 2. Config:  Learning rate, to be sth smaller than 0.003, its importnat hyperparameter
 3. Config: Lemgth max of input ot be sth more than 600.
 4. Code: Clipping of gradients in the code.
+
+Discussion:
+1. Change loss type -> what else? cosine distance
+2. Use activity labelling
+3. 
