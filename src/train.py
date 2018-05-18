@@ -3,6 +3,7 @@ import os
 import tensorflow as tf
 import time
 from config import train_config
+import numpy as np 
 
 from model import RNNModel
 from load_data import MotionDataset
@@ -26,11 +27,14 @@ def get_model_and_placeholders(config):
     target_pl = tf.placeholder(tf.float32, shape=[None, None, output_dim], name='input_pl')
     seq_lengths_pl = tf.placeholder(tf.int32, shape=[None], name='seq_lengths_pl')
     mask_pl = tf.placeholder(tf.float32, shape=[None, None], name='mask_pl')
+    state_1=tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_1')
+    state_2=tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_2')
 
     placeholders = {'input_pl': input_pl,
                     'target_pl': target_pl,
                     'seq_lengths_pl': seq_lengths_pl,
-                    'mask_pl': mask_pl}
+                    'mask_pl': mask_pl,
+                    'state_1': state_1,'state_2':state_2 }
 
     rnn_model_class = RNNModel
     return rnn_model_class, placeholders
@@ -50,7 +54,16 @@ def main(config):
     config['output_dim'] = data_train.target[0].shape[-1]
 
     # TODO if you would like to do any preprocessing of the data, here would be a good opportunity
-
+    mean_=np.mean(data_train.input_[0], axis=0)
+    
+    std_=np.std(data_train.input_[0], axis=0)
+    if config['preprocess'] :
+     data_train.input_[0]-= mean_
+     data_train.input_[0]/= std_
+     data_valid.input_[0]-= mean_
+     data_valid.input_[0]/= std_ 
+    
+    print(data_train.input_[0])
     # get input placeholders and get the model that we want to train
     rnn_model_class, placeholders = get_model_and_placeholders(config)
 
@@ -83,8 +96,12 @@ def main(config):
 
         # TODO choose the optimizer you desire here and define `train_op. The loss should be accessible through rnn_model.loss
         params = tf.trainable_variables()
-        train_op = None
-
+          # train_op = None
+        train_op= tf.train.AdamOptimizer(lr)
+        gradients,variables= zip(*train_op.compute_gradients(rnn_model.loss))
+        gradients ,_  = tf.clip_by_global_norm(gradients,5)
+        optimize= train_op.apply_gradients(zip(gradients,variables))
+        print('optimization params done')
     # create a graph for validation
     with tf.name_scope('validation'):
         rnn_model_valid = rnn_model_class(config, placeholders, mode='validation')
@@ -136,6 +153,9 @@ def main(config):
 
             # loop through all training batches
             for i, batch in enumerate(data_train.all_batches()):
+               print('i is ',batch.batch_size)
+                
+               if (batch.batch_size==config['batch_size']):
                 step = tf.train.global_step(sess, global_step)
                 current_step += 1
 
@@ -145,26 +165,34 @@ def main(config):
                 # we want to train, so must request at least the train_op
                 fetches = {'summaries': summaries_training,
                            'loss': rnn_model.loss,
-                           'train_op': train_op}
-
+                           'train_op': optimize,
+                           'error':rnn_model.error, 
+                           'error1':rnn_model.error1,
+                           'masked':rnn_model.masked}
                 # get the feed dict for the current batch
                 feed_dict = rnn_model.get_feed_dict(batch)
-
+                print('feed dict done')
+                print(feed_dict.keys())
+                
                 # feed data into the model and run optimization
                 training_out = sess.run(fetches, feed_dict)
-
+                print('training donee')
+                print('Error without mask',training_out['error'])
+                print('Error with mask',training_out['error1'])
+                print('MAskk,', training_out['masked'])
                 # write logs
                 train_summary_writer.add_summary(training_out['summaries'], global_step=step)
 
                 # print training performance of this batch onto console
                 time_delta = str(datetime.timedelta(seconds=int(time.time() - start_time)))
-                print('\rEpoch: {:3d} [{:4d}/{:4d}] time: {:>8} loss: {:.4f}'.format(
-                    e + 1, i + 1, data_train.n_batches, time_delta, training_out['loss']), end='')
+                # print('\rEpoch: {:3d} [{:4d}/{:4d}] time: {:>8} loss: {:.4f}'.format(
+                     #e + 1, i + 1, data_train.n_batches, time_delta, training_out['loss']), end='')
 
             # after every epoch evaluate the performance on the validation set
             total_valid_loss = 0.0
             n_valid_samples = 0
             for batch in data_valid.all_batches():
+             if batch.batch_size== config['batch_size']:
                 fetches = {'loss': rnn_model_valid.loss}
                 feed_dict = rnn_model_valid.get_feed_dict(batch)
                 valid_out = sess.run(fetches, feed_dict)
