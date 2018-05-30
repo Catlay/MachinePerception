@@ -1,7 +1,7 @@
 # configuration used by the training and evaluation scripts
 train_config = {}
-train_config['data_dir'] = '/home/mrozou/projectMP/MachinePerception/data'  # TODO where the data downloaded from Kaggle is stored, i.e. the *.npz files
-train_config['output_dir'] = '/home/mrozou/projectMP/MachinePerception/trained_models/'  # TODO where you want to store the checkpoints of different training runs
+train_config['data_dir'] = '/home/catlay/Documents/ETH/2018-MachinePerception/data'  # TODO where the data downloaded from Kaggle is stored, i.e. the *.npz files
+train_config['output_dir'] = '/home/catlay/Documents/ETH/2018-MachinePerception/trained_models'  # TODO where you want to store the checkpoints of different training runs
 train_config['name'] = 'a_name'  # TODO give your model a name if you want
 train_config['batch_size'] = 10  # TODO specify a batch size (this is currently just a dummy value)
 train_config['max_seq_length'] = 600  # TODO specify for how many time steps you want to unroll the RNN (this is currently just a dummy value)
@@ -22,7 +22,7 @@ train_config['preprocess']=0
 # some additional configuration parameters required when the configured model is used at inference time
 test_config = train_config.copy()
 test_config['max_seq_length'] = -1  # want to use entire sequence during test, which is fixed to 50, don't change this
-test_config['model_dir'] = '/home/mrozou/projectMP/MachinePerception/trained_models/a_name_1526137179'  # TODO path to the model that you want to evaluate
+test_config['model_dir'] = '/home/catlay/Documents/ETH/2018-MachinePerception/trained_models/'  # TODO path to the model that you want to evaluate
 test_config['checkpoint_id'] = None  # if None, the last checkpoint will be used
 test_config['prediction_length'] = 25  # how many frames to predict into the future (assignment requires 25 frames, but you can experiment with more if you'd like)
 test_config['time_stamp']=1
