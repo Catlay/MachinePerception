@@ -151,6 +151,7 @@ class RNNModel(object):
                 print('loss ', self.loss.get_shape())
                 tf.summary.scalar('loss', self.loss, collections=[self.summary_collection])
                 print('build loss end')
+    
     def count_parameters(self):
         """
         Counts the number of trainable parameters in this model

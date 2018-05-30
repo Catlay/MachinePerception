@@ -61,10 +61,10 @@ def main(config):
     print('std: ', std_)
 
     if config['preprocess'] :
-     data_train.input_[0]-= mean_
-     data_train.input_[0]/= std_
-     data_valid.input_[0]-= mean_
-     data_valid.input_[0]/= std_ 
+        data_train.input_[0]-= mean_
+        data_train.input_[0]/= std_
+        data_valid.input_[0]-= mean_
+        data_valid.input_[0]/= std_ 
     
     print('data_train.input_[0]: ', data_train.input_[0])
     
@@ -102,7 +102,7 @@ def main(config):
         params = tf.trainable_variables()
         train_op= tf.train.AdamOptimizer(lr)
         gradients,variables= zip(*train_op.compute_gradients(rnn_model.loss))
-        gradients ,_  = tf.clip_by_global_norm(gradients,5)
+        gradients ,_  = tf.clip_by_global_norm(gradients,25)
         optimize= train_op.apply_gradients(zip(gradients,variables))
         print('optimization params done')
     # create a graph for validation
@@ -161,6 +161,7 @@ def main(config):
                 
                if (batch.batch_size==config['batch_size']):
                 step = tf.train.global_step(sess, global_step)
+                print(current_step)
                 current_step += 1
 
                 if config['learning_rate_type'] == 'linear' and current_step % config['learning_rate_decay_steps'] == 0:
@@ -218,7 +219,7 @@ def main(config):
 
         # Training finished, always save model before exiting
         print('Training finished')
-        ckpt_path = saver.save(sess, os.path.join(config['model_dir'], 'model'), global_step)
+        ckpt_path = saver.save(sess, os.path.join(config['model_dir'], 'model'), global_step)       
         print('Model saved to file {}'.format(ckpt_path))
 
 
