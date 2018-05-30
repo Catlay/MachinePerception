@@ -75,28 +75,28 @@ class RNNModel(object):
             print('Time',self.config['time_stamp'])
             print('State dim',self.state_1.get_shape())
             for i in range(self.config['time_stamp']):
-              print(i)
+              #print(i)
               if i>0:
                tf.get_variable_scope().reuse_variables()
               output,state=lstm(self.input_[:,i,:],state)
-              print('RAW ouput',tf.convert_to_tensor(output).get_shape())
+              #print('RAW ouput',tf.convert_to_tensor(output).get_shape())
               outputs_all.append(output)
             self.final_state=state
               #print ('State Final is',self.final_state.h.get_shape())
-            print ('outputs all',len(outputs_all))
+            #print ('outputs all',len(outputs_all))
             outputs_all_stacked=tf.stack(outputs_all,axis=1)
-            print ('outputunrst',outputs_all_stacked.get_shape())
+            #print ('outputunrst',outputs_all_stacked.get_shape())
             outputs_all_unroll=tf.reshape(outputs_all_stacked,[self.config['batch_size_dim']*(self.config['time_stamp']),self.config['hidden_states']])
-            print ('outputuunroll',outputs_all_unroll.get_shape())
+            #print ('outputuunroll',outputs_all_unroll.get_shape())
         with tf.variable_scope('output', reuse=self.reuse): 
             W=tf.get_variable(name='W',shape=[self.config['hidden_states'],self.config['output_dim']],initializer=tf.contrib.layers.xavier_initializer())
             b= tf.get_variable(name='b',shape=[self.config['output_dim']],initializer=tf.contrib.layers.xavier_initializer())
             tf.get_variable_scope().reuse_variables()
-            print(b.get_shape())
-            print('hW',W.get_shape())
+            #print(b.get_shape())
+            #print('hW',W.get_shape())
             logits=tf.matmul(outputs_all_unroll,W) + b
             self.predictions=tf.reshape(logits,[self.config['batch_size_dim'],(self.max_seq_length),self.config['output_dim']])
-            print('Logits size is',logits.get_shape())
+            #print('Logits size is',logits.get_shape())
             print('finished RNN')
             predictions1= tf.argmax(logits,axis=1)
         

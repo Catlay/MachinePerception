@@ -119,7 +119,7 @@ def visualize_joint_angles(joint_angles, change_color_after_frame=None):
 if __name__ == '__main__':
     # load a random training sequence
     # TODO change data path here
-    train_data = np.load('../data/train.npz')['data']
+    train_data = np.load('/home/catlay/Documents/ETH/2018-MachinePerception/data/train.npz')['data']
     data = train_data[np.random.randint(len(train_data))]['angles']
 
     positions = forward_kinematics(data)

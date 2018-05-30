@@ -55,15 +55,19 @@ def main(config):
 
     # TODO if you would like to do any preprocessing of the data, here would be a good opportunity
     mean_=np.mean(data_train.input_[0], axis=0)
+    print('mean: ', mean_)
     
     std_=np.std(data_train.input_[0], axis=0)
+    print('std: ', std_)
+
     if config['preprocess'] :
      data_train.input_[0]-= mean_
      data_train.input_[0]/= std_
      data_valid.input_[0]-= mean_
      data_valid.input_[0]/= std_ 
     
-    print(data_train.input_[0])
+    print('data_train.input_[0]: ', data_train.input_[0])
+    
     # get input placeholders and get the model that we want to train
     rnn_model_class, placeholders = get_model_and_placeholders(config)
 
@@ -96,7 +100,6 @@ def main(config):
 
         # TODO choose the optimizer you desire here and define `train_op. The loss should be accessible through rnn_model.loss
         params = tf.trainable_variables()
-          # train_op = None
         train_op= tf.train.AdamOptimizer(lr)
         gradients,variables= zip(*train_op.compute_gradients(rnn_model.loss))
         gradients ,_  = tf.clip_by_global_norm(gradients,5)
@@ -144,6 +147,7 @@ def main(config):
         saver = tf.train.Saver(var_list=tf.trainable_variables(), max_to_keep=config['n_keep_checkpoints'])
 
         # start training
+        print('Start training')
         start_time = time.time()
         current_step = 0
         for e in range(config['n_epochs']):
@@ -176,10 +180,10 @@ def main(config):
                 
                 # feed data into the model and run optimization
                 training_out = sess.run(fetches, feed_dict)
-                print('training donee')
-                print('Error without mask',training_out['error'])
-                print('Error with mask',training_out['error1'])
-                print('MAskk,', training_out['masked'])
+                print('training done')
+                #print('Error without mask',training_out['error'])
+                #print('Error with mask',training_out['error1'])
+                #print('MAskk,', training_out['masked'])
                 # write logs
                 train_summary_writer.add_summary(training_out['summaries'], global_step=step)
 

@@ -102,9 +102,9 @@ def main(config):
                 print('State dim0', state_array[0].shape)
                 print('State dim0', state_array[1].shape)
                 print('State is', state_array)
-                print('next  pose is', next_pose)
+                #print('next  pose is', next_pose)
                 [state, predicted_pose] = sess.run(fetch, feed_dict)
-                print('pred pose is', predicted_pose)
+                #print('pred pose is', predicted_pose)
                 predicted_poses.append(np.copy(predicted_pose))
                 next_pose = predicted_pose
                     
@@ -114,7 +114,7 @@ def main(config):
             
         print('Bstchids',len(ids))
         print('J is',j)
-        print('ALl predictions are1',len(predictions))
+        print('All predictions are',len(predictions))
         seeds = np.concatenate(seeds, axis=0)
         predictions = np.concatenate(predictions, axis=0)
     print('Extended with',len(ids))
