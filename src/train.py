@@ -9,7 +9,7 @@ from keras import backend as K # RAH If we want to use Keras and tf together.
 import utils
 
 from model import RNNModel
-from model import Sequ2Sequ # RAH That would be our new model
+from model import Seq2seqModel # RAH That would be our new model
 from load_data import MotionDataset
 
 def load_data(config, split):
@@ -60,6 +60,7 @@ def main(config):
     data_valid = load_data(config, 'valid')
     config['input_dim'] = data_train.input_[0].shape[-1] 
     config['output_dim'] = data_train.target[0].shape[-1]
+    print('input shape: ', data_train.input_[0].shape)
 
     # *********************************************************************************
     # Preprocessing: one-hot, standardization
@@ -67,28 +68,29 @@ def main(config):
 
     # TODO if you would like to do any preprocessing of the data, here would be a good opportunity
 
+    '''
     if config['one_hot'] :
-          # Add a one-hot encoding at the end of the representation
-          the_sequence = np.zeros( (len(even_list), d + nactions), dtype=float )
-          the_sequence[ :, 0:d ] = action_sequence[even_list, :]
-          the_sequence[ :, d+action_idx ] = 1
-          trainData[(subj, action, subact, 'even')] = the_sequence
-        else:
-          trainData[(subj, action, subact, 'even')] = action_sequence[even_list, :]
+        # Add a one-hot encoding at the end of the representation
+        the_sequence = np.zeros( (len(even_list), d + nactions), dtype=float )
+        the_sequence[ :, 0:d ] = action_sequence[even_list, :]
+        the_sequence[ :, d+action_idx ] = 1
+        trainData[(subj, action, subact, 'even')] = the_sequence
+    else:
+        trainData[(subj, action, subact, 'even')] = action_sequence[even_list, :]
 
 
         if len(completeData) == 0:
           completeData = copy.deepcopy(action_sequence)
         else:
           completeData = np.append(completeData, action_sequence, axis=0)
-    
+    '''
     if config['preprocess'] :
 
         #train_set, complete_train = utils.load_data( data_dir, train_subject_ids, one_hot )
         #test_set,  complete_test  = utils.load_data( data_dir, test_subject_ids, one_hot )
 
         # RAH Get the normalization stats, input is list of all arrays of angles - what to feed in??
-        complete_train = data_train.input_
+        #complete_train = data_train.input_
         data_mean, data_std, dim_to_ignore, dim_to_use = utils.standardization_stats(data_train.input_)
 
         # RAH Standardization -- subtract mean, divide by stdev

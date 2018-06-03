@@ -1,13 +1,9 @@
-import numpy as np
-import pandas as pd
-
-# *****************************************
-# This code is copied from Julieta Martinez
-# *****************************************
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
+import numpy as np
+import pandas as pd
 
 from six.moves import xrange # pylint: disable=redefined-builtin
 import copy
@@ -233,8 +229,43 @@ def standardization_stats(completeData):
     dimensions_to_ignore: vector with dimensions not used by the model
     dimensions_to_use: vector with dimensions used by the model
   """
-  data_mean = np.mean(completeData, axis=(0,1)) # mean over all samples of all the 75 features
-  data_std  = np.std(completeData, axis=(0,1)) # std over all samples of all the 75 features
+  print('******** mean: ', np.mean(completeData[1]))
+  print('******** input: ', completeData[120].shape)
+  
+  # Data is 600 frames long, shorter ones give a problem
+  # Either pad and take mean of nonzero values or make a loop
+  #data_mean = np.mean ( completeData, axis=(0,1) ) # mean over all samples of all the 75 features
+  #data_std  = np.std ( padded_data, axis=(0,1) ) # std over all samples of all the 75 features 
+
+  
+  
+  
+  total_frames = 0
+  for s in range (0, len(completeData)):
+    num_row, num_col = completeData[s].shape
+    total_frames += num_row
+  print ('total frames: ', total_frames)
+
+  data_reshaped = np.full((total_frames, 75),0)
+
+  fcount = 0
+  for s in range(0, len(completeData)):
+    for i in range(0, 74):
+      num_row, num_col = completeData[s][i].shape
+      print('num_row: ', num_row)
+      print('num_col: ', num_col)
+      data_reshaped[fcount:fcount+num_row-1,i] = completeData[s][:,i]
+      fcount += num_row 
+      
+  
+  print('example: ', completeData[0][:,3])
+
+  print('shape: ', data_reshaped[54].shape)
+    
+    #s_mean = np.mean( completeData[s], axis=0 )
+
+    #data_mean = data_mean + s_mean
+  #data_mean = data_mean/len(completeData)
 
   dimensions_to_ignore = []
   dimensions_to_use    = []
