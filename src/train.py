@@ -4,11 +4,13 @@ import tensorflow as tf
 import time
 from config import train_config
 import numpy as np 
+import keras
+from keras import backend as K # RAH If we want to use Keras and tf together.
+import utils
 
 from model import RNNModel
+from model import Sequ2Sequ # RAH That would be our new model
 from load_data import MotionDataset
-from utils import export_config
-
 
 def load_data(config, split):
     print('Loading data from {} ...'.format(config['data_dir']))
@@ -27,8 +29,9 @@ def get_model_and_placeholders(config):
     target_pl = tf.placeholder(tf.float32, shape=[None, None, output_dim], name='input_pl')
     seq_lengths_pl = tf.placeholder(tf.int32, shape=[None], name='seq_lengths_pl')
     mask_pl = tf.placeholder(tf.float32, shape=[None, None], name='mask_pl')
-    state_1=tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_1')
-    state_2=tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_2')
+    
+    state_1 = tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_1')
+    state_2 = tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_2')
 
     placeholders = {'input_pl': input_pl,
                     'target_pl': target_pl,
@@ -36,8 +39,13 @@ def get_model_and_placeholders(config):
                     'mask_pl': mask_pl,
                     'state_1': state_1,'state_2':state_2 }
 
-    rnn_model_class = RNNModel
-    return rnn_model_class, placeholders
+    # RAH Choose between the available models and initiate class accordingly
+    if config['which_model'] is 'LSTM':
+        rnn_model_class = RNNModel
+        return rnn_model_class, placeholders
+    elif config['which_model'] is 'Seq2seq':
+        rnn_model_class = Seq2seqModel
+        return rnn_model_class, placeholders
 
 
 def main(config):
@@ -50,32 +58,65 @@ def main(config):
     # load the data, this requires that the *.npz files you downloaded from Kaggle be named `train.npz` and `valid.npz`
     data_train = load_data(config, 'train')
     data_valid = load_data(config, 'valid')
-    config['input_dim'] = data_train.input_[0].shape[-1]
+    config['input_dim'] = data_train.input_[0].shape[-1] 
     config['output_dim'] = data_train.target[0].shape[-1]
 
-    # TODO if you would like to do any preprocessing of the data, here would be a good opportunity
-    mean_=np.mean(data_train.input_[0], axis=0)
-    print('mean: ', mean_)
-    
-    std_=np.std(data_train.input_[0], axis=0)
-    print('std: ', std_)
+    # *********************************************************************************
+    # Preprocessing: one-hot, standardization
+    # *********************************************************************************
 
+    # TODO if you would like to do any preprocessing of the data, here would be a good opportunity
+
+    if config['one_hot'] :
+          # Add a one-hot encoding at the end of the representation
+          the_sequence = np.zeros( (len(even_list), d + nactions), dtype=float )
+          the_sequence[ :, 0:d ] = action_sequence[even_list, :]
+          the_sequence[ :, d+action_idx ] = 1
+          trainData[(subj, action, subact, 'even')] = the_sequence
+        else:
+          trainData[(subj, action, subact, 'even')] = action_sequence[even_list, :]
+
+
+        if len(completeData) == 0:
+          completeData = copy.deepcopy(action_sequence)
+        else:
+          completeData = np.append(completeData, action_sequence, axis=0)
+    
     if config['preprocess'] :
-        data_train.input_[0]-= mean_
-        data_train.input_[0]/= std_
-        data_valid.input_[0]-= mean_
-        data_valid.input_[0]/= std_ 
+
+        #train_set, complete_train = utils.load_data( data_dir, train_subject_ids, one_hot )
+        #test_set,  complete_test  = utils.load_data( data_dir, test_subject_ids, one_hot )
+
+        # RAH Get the normalization stats, input is list of all arrays of angles - what to feed in??
+        complete_train = data_train.input_
+        data_mean, data_std, dim_to_ignore, dim_to_use = utils.standardization_stats(data_train.input_)
+
+        # RAH Standardization -- subtract mean, divide by stdev
+        train_set  = utils.standardize_data( train_set, data_mean, data_std, dim_to_use, one_hot )
+        valid_set  = utils.standardize_data( test_set,  data_mean, data_std, dim_to_use, one_hot )
+
+        data_train.input_ = train_set
+        data_valid.input_ = valid_set
+       
+    print("standardization of data done.")
+    #print('data_train.input_[0]: ', data_train.input_[0])
+
+    # *********************************************************************************
+    # Get Model
+    # *********************************************************************************
     
-    print('data_train.input_[0]: ', data_train.input_[0])
-    
-    # get input placeholders and get the model that we want to train
+    # get input placeholders and get the model that we want to train   
     rnn_model_class, placeholders = get_model_and_placeholders(config)
 
     # Create a variable that stores how many training iterations we performed.
     # This is useful for saving/storing the network
     global_step = tf.Variable(1, name='global_step', trainable=False)
 
-    # create a training graph, this is the graph we will use to optimize the parameters
+    # *********************************************************************************
+    # Create training and validation graphs, summary stats for monitoring
+    # *********************************************************************************
+ 
+    # Ceate a training graph, this is the graph we will use to optimize the parameters
     with tf.name_scope('training'):
         rnn_model = rnn_model_class(config, placeholders, mode='training')
         rnn_model.build_graph()
@@ -100,11 +141,12 @@ def main(config):
 
         # TODO choose the optimizer you desire here and define `train_op. The loss should be accessible through rnn_model.loss
         params = tf.trainable_variables()
-        train_op= tf.train.AdamOptimizer(lr)
-        gradients,variables= zip(*train_op.compute_gradients(rnn_model.loss))
-        gradients ,_  = tf.clip_by_global_norm(gradients,25)
-        optimize= train_op.apply_gradients(zip(gradients,variables))
+        train_op = tf.train.AdamOptimizer(lr)
+        gradients,variables = zip(*train_op.compute_gradients(rnn_model.loss))
+        gradients ,_  = tf.clip_by_global_norm(gradients,config['gradient_clipping'])
+        optimize = train_op.apply_gradients(zip(gradients,variables))
         print('optimization params done')
+   
     # create a graph for validation
     with tf.name_scope('validation'):
         rnn_model_valid = rnn_model_class(config, placeholders, mode='validation')
@@ -131,7 +173,11 @@ def main(config):
     # dump the config to the model directory in case we later want to see it
     export_config(config, os.path.join(config['model_dir'], 'config.txt'))
 
+
+
     with tf.Session() as sess:
+        # To make Keras layers possible: https://stackoverflow.com/questions/47167630/use-keras-layer-in-tensorflow-code
+        K.set_session(tf_sess) # TODO RAH, might not be right place and/or right command
         # Add the ops to initialize variables.
         init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
         # Actually intialize the variables
@@ -190,8 +236,8 @@ def main(config):
 
                 # print training performance of this batch onto console
                 time_delta = str(datetime.timedelta(seconds=int(time.time() - start_time)))
-                # print('\rEpoch: {:3d} [{:4d}/{:4d}] time: {:>8} loss: {:.4f}'.format(
-                     #e + 1, i + 1, data_train.n_batches, time_delta, training_out['loss']), end='')
+                print('\rEpoch: {:3d} [{:4d}/{:4d}] time: {:>8} loss: {:.4f}'.format(
+                     e + 1, i + 1, data_train.n_batches, time_delta, training_out['loss']), end='')
 
             # after every epoch evaluate the performance on the validation set
             total_valid_loss = 0.0
@@ -201,7 +247,7 @@ def main(config):
                 fetches = {'loss': rnn_model_valid.loss}
                 feed_dict = rnn_model_valid.get_feed_dict(batch)
                 valid_out = sess.run(fetches, feed_dict)
-
+                print('valid loss: ', valid_out['loss'], 'for batch ', batch)
                 total_valid_loss += valid_out['loss'] * batch.batch_size
                 n_valid_samples += batch.batch_size
 
