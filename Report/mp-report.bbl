@@ -1,0 +1,97 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{4}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{B{\"{u}}tepage, Black, Kragic, and
+  Kjellstr{\"{o}}m}{B{\"{u}}tepage et~al\mbox{.}}{2017}]%
+        {Buetepage2017}
+\bibfield{author}{\bibinfo{person}{Judith B{\"{u}}tepage},
+  \bibinfo{person}{Michael~J. Black}, \bibinfo{person}{Danica Kragic}, {and}
+  \bibinfo{person}{Hedvig Kjellstr{\"{o}}m}.} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Deep representation learning for human motion
+  prediction and classification}.
+\newblock \bibinfo{journal}{\emph{CoRR}}  \bibinfo{volume}{abs/1702.07486}
+  (\bibinfo{year}{2017}).
+\newblock
+\showeprint[arxiv]{1702.07486}
+\urldef\tempurl%
+\url{http://arxiv.org/abs/1702.07486}
+\showURL{%
+\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Fragkiadaki, Levine, and Malik}{Fragkiadaki
+  et~al\mbox{.}}{2015}]%
+        {Fragkiadaki2014}
+\bibfield{author}{\bibinfo{person}{Katerina Fragkiadaki},
+  \bibinfo{person}{Sergey Levine}, {and} \bibinfo{person}{Jitendra Malik}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Recurrent Network Models for Kinematic Tracking}.
+\newblock \bibinfo{journal}{\emph{CoRR}}  \bibinfo{volume}{abs/1508.00271}
+  (\bibinfo{year}{2015}).
+\newblock
+\urldef\tempurl%
+\url{http://arxiv.org/abs/1508.00271}
+\showURL{%
+\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Martinez, Black, and Romero}{Martinez
+  et~al\mbox{.}}{2017}]%
+        {Martinez2017}
+\bibfield{author}{\bibinfo{person}{Julieta Martinez},
+  \bibinfo{person}{Michael~J. Black}, {and} \bibinfo{person}{Javier Romero}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{On human motion prediction using recurrent neural
+  networks}. In \bibinfo{booktitle}{\emph{CVPR}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Sutskever, Vinyals, and Le}{Sutskever
+  et~al\mbox{.}}{[n. d.]}]%
+        {Sutskever2014}
+\bibfield{author}{\bibinfo{person}{I. Sutskever}, \bibinfo{person}{O. Vinyals},
+  {and} \bibinfo{person}{Q.~V. Le}.} \bibinfo{year}{[n. d.]}\natexlab{}.
+\newblock \showarticletitle{Sequence to Sequence Learning with Neural
+  Networks}.
+\newblock \bibinfo{journal}{\emph{ArXiv e-prints}} (\bibinfo{year}{[n. d.]}).
+\newblock
+\showeprint[arxiv]{1409}
+
+
+\end{thebibliography}
