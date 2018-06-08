@@ -8,9 +8,6 @@ import pandas as pd
 from six.moves import xrange # pylint: disable=redefined-builtin
 import copy
 
-# **************************
-# Back to our skeleton code:
-# **************************
 class Skeleton(object):
     """
     Represents a skeleton, i.e. defines how the joints are linked together and the offset for each bone.
@@ -179,94 +176,65 @@ def export_to_csv(data, ids, output_file):
 
     data_frame.to_csv(output_file, float_format='%.8f')
 
-# *****************************************
-# This code is copied from Julieta Martinez
-# *****************************************
+def one_hot_encoding( data, labels):
+  """
+  add features with one-hot encoding of activity/label
+  """
+  
+  n_labels = 14
+  data_onehot = []
+
+  for d in range(0,len(data)):    
+    onehot = np.zeros((data[d].shape(0), n_labels))        # one-hot matrix with zeroes
+    label = int(data[d]['action_label'])
+    onehot[label] = 1                                      # set target idx to 1
+    data_onehot[d] = np.append(data[d],onehot, axis=1)     # add one_hot vector to data.
+    #print('data onehot: ', data_onehot)
+  
+  return data_onehot
 
 
 def standardize_data( data, data_mean, data_std, dim_to_use, one_hot ):
   """
-  Standardize input data by spotting unused dimensions, subtracting the mean and
+  Standardize input data by getting rid of unused dimensions, subtracting the mean and
   dividing by the standard deviation
 
   Args
-    data: mxnx75 tensor with data to normalize, where m is amount of samples
+    data: list of numpy arrays with data to normalize
     data_mean: vector of mean used to normalize the data
     data_std: vector of standard deviation used to normalize the data
     dim_to_use: vector with dimensions used by the model
-    one_hot: whether the data comes with one-hot encoding
   Returns
     data_out: the passed data matrix, but normalized
   """
-  data_out = {}
-  nactions = 14 # number of actions in dataset for one-hot encoding
-  
-  if not one_hot:
-    # No one-hot encoding... no need to do anything special
-    for key in data.keys():
-      data_out = np.divide( (data-data_mean), data_std )
-      data_out[ key ] = np.divide( (data[key] - data_mean), data_std )
-      data_out[ key ] = data_out[ key ][ :, dim_to_use ]
+  data_out = data
 
-  else:
-    for key in data.keys():
-      data_out[ key ] = np.divide( (data[key][:, 0:75] - data_mean), data_std )
-      data_out[ key ] = data_out[ key ][ :, dim_to_use ]
-      data_out[ key ] = np.hstack( (data_out[key], data[key][:,-nactions:]) )
+    # No one-hot encoding... no need to do anything special
+  for s in range(0,len(data)):
+    data_out[s] = np.divide( (data[s]-data_mean), data_std )
+    data_out[s] = data_out[s][ :, dim_to_use ]
 
   return data_out
 
 
 def standardization_stats(completeData):
-  # RAH: Adapted from Martinez. Needed.
-
-  """"  
+  """"  RAH: Adapted from Martinez.
   Args
-    completeData: list of nx75 matrices with data to standardize
+    completeData: list of arrays with data to standardize
   Returns
     data_mean: vector of mean used to standardize the data
-    data_std: vector of standard deviation used to normalize the data
+    data_std: vector of standard deviation used to standardize the data
     dimensions_to_ignore: vector with dimensions not used by the model
     dimensions_to_use: vector with dimensions used by the model
   """
-  print('******** mean: ', np.mean(completeData[1]))
-  print('******** input: ', completeData[120].shape)
   
-  # Data is 600 frames long, shorter ones give a problem
-  # Either pad and take mean of nonzero values or make a loop
-  #data_mean = np.mean ( completeData, axis=(0,1) ) # mean over all samples of all the 75 features
-  #data_std  = np.std ( padded_data, axis=(0,1) ) # std over all samples of all the 75 features 
+  data_reshaped = completeData[0]
+  for s in range (1, len(completeData)): 
+    data_reshaped = np.concatenate((data_reshaped , completeData[s])) 
 
+  data_mean = np.mean ( data_reshaped, axis=(0) ) # mean over all samples of all the 75 features
+  data_std  = np.std ( data_reshaped, axis=(0) ) # std over all samples of all the 75 features 
   
-  
-  
-  total_frames = 0
-  for s in range (0, len(completeData)):
-    num_row, num_col = completeData[s].shape
-    total_frames += num_row
-  print ('total frames: ', total_frames)
-
-  data_reshaped = np.full((total_frames, 75),0)
-
-  fcount = 0
-  for s in range(0, len(completeData)):
-    for i in range(0, 74):
-      num_row, num_col = completeData[s][i].shape
-      print('num_row: ', num_row)
-      print('num_col: ', num_col)
-      data_reshaped[fcount:fcount+num_row-1,i] = completeData[s][:,i]
-      fcount += num_row 
-      
-  
-  print('example: ', completeData[0][:,3])
-
-  print('shape: ', data_reshaped[54].shape)
-    
-    #s_mean = np.mean( completeData[s], axis=0 )
-
-    #data_mean = data_mean + s_mean
-  #data_mean = data_mean/len(completeData)
-
   dimensions_to_ignore = []
   dimensions_to_use    = []
 
@@ -277,7 +245,7 @@ def standardization_stats(completeData):
 
   return data_mean, data_std, dimensions_to_ignore, dimensions_to_use
 
-def unStandardizeData(normalizedData, data_mean, data_std, dimensions_to_ignore, actions, one_hot ):
+def unStandardizeData(normalizedData, data_mean, data_std, dimensions_to_ignore, one_hot ):
   """  Adapted from Martinez:
   Args
     normalizedData: nxd matrix with normalized data
@@ -292,7 +260,7 @@ def unStandardizeData(normalizedData, data_mean, data_std, dimensions_to_ignore,
   T = normalizedData.shape[0]
   D = data_mean.shape[0]
 
-  origData = np.zeros((T, D), dtype=np.float32)
+  origData = np.zeros((T, D), dtype=float32)
   dimensions_to_use = []
   for i in range(D):
     if i in dimensions_to_ignore:
@@ -301,7 +269,7 @@ def unStandardizeData(normalizedData, data_mean, data_std, dimensions_to_ignore,
   dimensions_to_use = np.array(dimensions_to_use)
 
   if one_hot:
-    origData[:, dimensions_to_use] = normalizedData[:, :-len(actions)]
+    origData[:, dimensions_to_use] = normalizedData[:, :-14] # 14 is number of actions
   else:
     origData[:, dimensions_to_use] = normalizedData
 

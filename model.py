@@ -35,7 +35,8 @@ class RNNModel(object):
         self.build_model()
         self.build_loss()
         self.count_parameters()
-        print('Count?param end')
+        #print('Count?param end')
+    
     def build_model(self):
         """
         Builds the actual model.
@@ -62,6 +63,7 @@ class RNNModel(object):
         print('Max seq lenght',self.config['max_seq_length'])
         print('Time',self.config['time_stamp'])
         print('State dim',self.state_1.get_shape())
+        
         with tf.variable_scope('rnn_model', reuse=self.reuse):
             #self.initial_state = None
             #self.final_state = None
@@ -101,7 +103,7 @@ class RNNModel(object):
         
             print('predictions',predictions1.get_shape())
          #self.predictions=tf.reshape( predictions1,[self.config['batch_size'],(self.max_seq_length),75])
-         #self.logits= logits
+
 
     def build_loss(self):
         """
@@ -118,7 +120,7 @@ class RNNModel(object):
               #  loss=tf.nn.sparse_softmax_cross_entropy_with_logits(labels=self.target, logits=self.logits)
               #  self.loss = tf.reduce_sum(loss)
                 print(' shape of mask,', self.mask.get_shape())
-                mask1=tf.tile(tf.expand_dims(self.mask,axis=2), [1 , 1, 75])
+                mask1=tf.tile(tf.expand_dims(self.mask,axis=2), [1 , 1, self.config['output_dim']])
                 print(mask1.get_shape())
                 error= tf.abs((self.target-self.predictions) )
                 print('er before change',error.get_shape())

@@ -33,16 +33,24 @@ def get_model_and_placeholders(config):
     state_1 = tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_1')
     state_2 = tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_2')
 
+    #enc_in = tf.placeholder(dtype, shape=[None, config['sequ_length_in']-1, input_dim], name="enc_in")
+    #dec_in = tf.placeholder(dtype, shape=[None, config['sequ_length_in'], input_dim], name="dec_in")
+    #dec_out = tf.placeholder(dtype, shape=[None, config['sequ_length_out'], input_dim], name="dec_out")
+
     placeholders = {'input_pl': input_pl,
                     'target_pl': target_pl,
                     'seq_lengths_pl': seq_lengths_pl,
                     'mask_pl': mask_pl,
-                    'state_1': state_1,'state_2':state_2 }
+                    'state_1': state_1,
+                    'state_2': state_2 }
 
     # RAH Choose between the available models and initiate class accordingly
     if config['which_model'] is 'LSTM':
-        rnn_model_class = RNNModel
+        rnn_model_class = BasicLSTMModel
         return rnn_model_class, placeholders
+    elif config['which_model'] is 'MultiLSTM':
+        rnn_model_class = MultiLSTMModel
+        return rnn_model_class, placeholders    
     elif config['which_model'] is 'Seq2seq':
         rnn_model_class = Seq2seqModel
         return rnn_model_class, placeholders
@@ -58,9 +66,8 @@ def main(config):
     # load the data, this requires that the *.npz files you downloaded from Kaggle be named `train.npz` and `valid.npz`
     data_train = load_data(config, 'train')
     data_valid = load_data(config, 'valid')
-    config['input_dim'] = data_train.input_[0].shape[-1] 
-    config['output_dim'] = data_train.target[0].shape[-1]
-    print('input shape: ', data_train.input_[0].shape)
+    #print('action_label: ', data_train.action_labels)
+    
 
     # *********************************************************************************
     # Preprocessing: one-hot, standardization
@@ -68,40 +75,34 @@ def main(config):
 
     # TODO if you would like to do any preprocessing of the data, here would be a good opportunity
 
-    '''
-    if config['one_hot'] :
-        # Add a one-hot encoding at the end of the representation
-        the_sequence = np.zeros( (len(even_list), d + nactions), dtype=float )
-        the_sequence[ :, 0:d ] = action_sequence[even_list, :]
-        the_sequence[ :, d+action_idx ] = 1
-        trainData[(subj, action, subact, 'even')] = the_sequence
-    else:
-        trainData[(subj, action, subact, 'even')] = action_sequence[even_list, :]
 
-
-        if len(completeData) == 0:
-          completeData = copy.deepcopy(action_sequence)
-        else:
-          completeData = np.append(completeData, action_sequence, axis=0)
-    '''
     if config['preprocess'] :
 
-        #train_set, complete_train = utils.load_data( data_dir, train_subject_ids, one_hot )
-        #test_set,  complete_test  = utils.load_data( data_dir, test_subject_ids, one_hot )
-
-        # RAH Get the normalization stats, input is list of all arrays of angles - what to feed in??
-        #complete_train = data_train.input_
         data_mean, data_std, dim_to_ignore, dim_to_use = utils.standardization_stats(data_train.input_)
 
+        train_set = []
+        valid_set = []
         # RAH Standardization -- subtract mean, divide by stdev
-        train_set  = utils.standardize_data( train_set, data_mean, data_std, dim_to_use, one_hot )
-        valid_set  = utils.standardize_data( test_set,  data_mean, data_std, dim_to_use, one_hot )
+        train_set  = utils.standardize_data( data_train.input_, data_mean, data_std, dim_to_use, config['one_hot'] )
+        valid_set  = utils.standardize_data( data_valid.input_,  data_mean, data_std, dim_to_use, config['one_hot'] )
 
         data_train.input_ = train_set
         data_valid.input_ = valid_set
-       
+        # RAH we cannot devide by std if std=0, ignore those dimensions, also in target
+        for s in range(0,len(data_train.target)):
+            data_train.target[ s ] = data_train.target[ s ][ :, dim_to_use ]
+        for s in range(0,len(data_valid.target)):    
+            data_valid.target[ s ] = data_valid.target[ s ][ :, dim_to_use ]
+    
+    config['input_dim'] = data_train.input_[0].shape[-1] 
+    config['output_dim'] = data_train.target[0].shape[-1]
+    print('input shape: ', data_train.input_[0].shape)
     print("standardization of data done.")
-    #print('data_train.input_[0]: ', data_train.input_[0])
+
+    
+    if config['one_hot']:
+        data_train.target = utils.one_hot_encoding( data_train.input_, data_train.action_labels)
+
 
     # *********************************************************************************
     # Get Model
@@ -173,13 +174,17 @@ def main(config):
     summaries_valid = tf.summary.merge([loss_valid_s])
 
     # dump the config to the model directory in case we later want to see it
-    export_config(config, os.path.join(config['model_dir'], 'config.txt'))
+    utils.export_config(config, os.path.join(config['model_dir'], 'config.txt'))
 
 
+
+    # *********************************************************************************
+    # Session Run
+    # *********************************************************************************
 
     with tf.Session() as sess:
         # To make Keras layers possible: https://stackoverflow.com/questions/47167630/use-keras-layer-in-tensorflow-code
-        K.set_session(tf_sess) # TODO RAH, might not be right place and/or right command
+        ##K.set_session(tf_sess) # TODO RAH, might not be right place and/or right command
         # Add the ops to initialize variables.
         init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
         # Actually intialize the variables
@@ -245,13 +250,13 @@ def main(config):
             total_valid_loss = 0.0
             n_valid_samples = 0
             for batch in data_valid.all_batches():
-             if batch.batch_size== config['batch_size']:
-                fetches = {'loss': rnn_model_valid.loss}
-                feed_dict = rnn_model_valid.get_feed_dict(batch)
-                valid_out = sess.run(fetches, feed_dict)
-                print('valid loss: ', valid_out['loss'], 'for batch ', batch)
-                total_valid_loss += valid_out['loss'] * batch.batch_size
-                n_valid_samples += batch.batch_size
+                if batch.batch_size== config['batch_size']:
+                    fetches = {'loss': rnn_model_valid.loss}
+                    feed_dict = rnn_model_valid.get_feed_dict(batch)
+                    valid_out = sess.run(fetches, feed_dict)
+                    print('valid loss: ', valid_out['loss'], 'for batch ', batch)
+                    total_valid_loss += valid_out['loss'] * batch.batch_size
+                    n_valid_samples += batch.batch_size
 
             # write validation logs
             avg_valid_loss = total_valid_loss / n_valid_samples
