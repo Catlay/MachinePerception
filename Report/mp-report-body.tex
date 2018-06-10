@@ -56,6 +56,19 @@ Additional comments:
 
 
 \subsection{Preprocesssing and representation}
+
+In the project of Human Motion, the architecture we used to solve the problem 
+is based on RNN architecture using LSTM networks. We created an unrolled LSTM network that in each time step is being trained 
+to predict the next pose. This can be seen also in training architecture, where the red poses are the predicted poses fromt he LSTM architecture
+and the greenones are the ground truths, meaning the real-true positions from the training data.
+The loss we used wa sthe L2 loss to minimize. We tried also some other distance functions, like the cosine loss, but this didnt help a lot and the 
+vlaidation error was the same or a bit worse compared to the L2 norm, therefore we prefered the L2 loss.
+Also we used SGD, stochastic gradient descent and the ADAM optimizer to solve the optimization problem in the training process. We clipped also the 
+norms to a factor of 5, so that we limit the magnitude of gradients and the Adam optimizer descends indeed to a minimum.
+
+\includegraphics[width=5cm,height=5cm]{Prediciton_achitecture.PNG}
+
+\includegraphics[width=5cm,height=5cm]{Training_architecture.PNG}
 \subsection{Network structure}
  
  \begin{enumerate}
@@ -68,12 +81,29 @@ Additional comments:
 
 \section{Experiments}
 
+\begin{table}[]
+	\centering
+	\caption{Value of the Parameters }
+	\label{my-label}
+	\begin{tabular}{cc}
+			Parameter& Value \\
+		\hline
+     	\hline
+		Learning rate  &  0.0015 fixed    \\
+		Batch Size  & 10 \\
+		Optimizer  & Adam  \\
+		Epochs  & 9 \\
+		Max Length size  &  600 \\
+		Clipping grads &  5\\
+		\hline
+	\end{tabular}
+\end{table}
 
 \section{Conclusion}
 
 
 \begin{acks}
-	The authors would like to thank Prof. Hilgens for providing the theoretical background needed for this work and his assistants for the skeleton code that allowed us to focus on the most interesting aspects of the task.
+	The authors would like to thank Prof. Dr. Otmar Hilliges for providing the theoretical background needed for this work and his assistants for the skeleton code that allowed us to focus on the most interesting aspects of the task.
 	
 	The work is carried out in the frame of the lecture "Machine Perception" at ETH Zurich in the spring semester 2018.
 	
