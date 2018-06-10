@@ -6,7 +6,8 @@
 
 In the project of Human Motion, the architecture we used to solve the problem of motion prediction 
 is based on RNN architecture using LSTM networks. We created an unrolled LSTM network that in each time step is being trained 
-to predict the next pose. This can be seen also in Figure training_architecture, where the red poses are the predicted poses fromt he LSTM architecture
+to predict the next pose. Therefore we saw the porblem as a regression problem, where we construct in the continous angles- space the predicted poses.
+This can be seen also in Figure training_architecture, where the red poses are the predicted poses fromt he LSTM architecture
 and the greenones are the ground truths, meaning the real-true positions from the training data.
 The loss we used wa sthe L2 loss to minimize. We tried also some other distance functions, like the cosine loss, but this didnt help a lot and the 
 vlaidation error was the same or a bit worse compared to the L2 norm, therefore we prefered the L2 loss.
