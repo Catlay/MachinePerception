@@ -5,18 +5,22 @@
 
 \section{Introduction}
 
-Motion prediction is one of the tasks that is automatically done by humans but very hard to accomplish by machines. While even insects already have a physical model of the world, either learnt or predefined, we have to teach it to machines. Applications: human-computer interaction, motion synthesis, motion prediction for virtual and augmented reality.
-...
-Using a single LSTM cell we build the most basic RNN network for human motion prediction and took this as our baseline for improvements. 
+Motion prediction is one of the tasks that is automatically done by humans but very hard to accomplish by machines. While even insects already have a physical model of the world, either learnt or predefined, we have to teach it to machines. There are many applications nowaday that are based on human motion data analysis like human-computer interaction, motion synthesis, motion prediction for virtual and augmented reality, automated driving, biomedical engineering applications.
+Using a state of the art unrolled LSTM cell we build the most basic RNN network for human motion prediction and took this as our baseline for improvements. 
 
 \section{Related work}
 Recent work focused on RNN based architectures to model human motion, with the goal of learning time-dependent representations that perform tasks such as short term motion prediction. 
 
-Julieta Martinez 2017: Trained encoder and decoder together with shared weights, single GRU. Used velocities through a residual architecture. Error reduction: fed predictions of the net back \cite{Martinez2017}
+Fragkiadaki 2014: introduced an encoder-decoder (ERD) network, which is a type of recurrent neural network (RNN) model, that combines representation learning with learning temporal dynamics \cite{Fragkiadaki2014}. Also there the writers used some basic preprocessing, like standarization of data and adding noise to the input data so that the performance of the RNN base don LSTM technique is better.
 
-Fragkiadaki 2014: introduced an encoder-decoder (ERD) network, which is a type of recurrent neural network (RNN) model, that combines representation learning with learning temporal dynamics \cite{Fragkiadaki2014}. 
+Julieta Martinez 2017: Trained encoder and decoder together with shared weights, single GRU. Used velocities through a residual architecture. Error reduction: fed predictions of the net back \cite{Martinez2017}. This work is similar to the techniques use din NLP, Natural Laguage Processing, as described in \cite{Sutskever2014}
 
 Sutskever 2014 (Sequence to sequence learning with neural networks): Deep LSTM's significantly outperform shallow LSTMs. They used therefore 4 layers. They also reversed the order of word inputs and would then perform better on long sentences. Stochastic gradient, 7.5 epochs, same length of input vector in batches: speed up of training. Best result with ensemble of LSTM that differ in their random initialization and in the random order or minibatches. \cite{Sutskever2014}\\
+
+Millinges et al:
+
+
+
 
 Buetepage: \cite{Buetepage2017}
 
