@@ -22,9 +22,9 @@ train_config['hidden_states'] = 1024 # size of cell
 train_config['sequ_length_in'] = 50 # Number of frames to feed into the encoder"
 train_config['sequ_length_out'] = 25 # Number of frames the decoder has to predict
 train_config['keep_prop'] = 0.5 # probability for drop out
-train_config['num_layers'] =  # number of layers
-train_config['preprocess']= 1
-train_config['one_hot'] = 1 # 
+train_config['num_layers'] =  1 # number of layers
+train_config['preprocess']= 0
+train_config['one_hot'] = 0 # 
 ##train_config['loss_to_use'] = 'supervised' #[supervised, sampling_based]. Whether to use ground truth in each timestep to compute the loss after decoding, or to feed back the prediction from the previous time-step.
 ##train_config['res_vel'] = 0 # whether to use a residual connection that models velocities.
 # some additional configuration parameters required when the configured model is used at inference time

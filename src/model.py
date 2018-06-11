@@ -274,7 +274,8 @@ class MultiLSTMModel(object):
                 masked=tf.equal(mask1,0)
                 zeros=tf.zeros_like(error)
                 new_error=tf.where(masked,zeros,error)
-                                
+                              
+                
                 self.mask.get_shape()   
                 self.error = error
                 self.error1 = new_error
@@ -412,7 +413,7 @@ class Seq2SeqModel(object):
             # Build the RNN
             # Basic RNN does not have a loop function in its API, so copying here.
             with vs.variable_scope("basic_rnn_seq2seq"):
-                 _, enc_state = tf.contrib.rnn.static_rnn(cell, enc_in, dtype=tf.float32) # Encoder
+                _, enc_state = tf.contrib.rnn.static_rnn(cell, enc_in, dtype=tf.float32) # Encoder
                 outputs, self.states = tf.contrib.legacy_seq2seq.rnn_decoder( dec_in, enc_state, cell, loop_function=lf ) # Decoder
             #elif architecture == "tied":
             #    outputs, self.states = tf.contrib.legacy_seq2seq.tied_rnn_seq2seq( enc_in, dec_in, cell, loop_function=lf )
@@ -425,17 +426,17 @@ class Seq2SeqModel(object):
                 # Run Dynamic RNN
                 #   encoder_outputs: [max_time, batch_size, num_units]
                 #   encoder_state: [batch_size, num_units]
-                 _, enc_state = tf.contrib.rnn.static_rnn(cell, enc_in, dtype=tf.float32) # Encoder
+                _, enc_state = tf.contrib.rnn.static_rnn(cell, enc_in, dtype=tf.float32) # Encoder
                 outputs, self.states = tf.contrib.legacy_seq2seq.rnn_decoder( 
                     dec_in, #inputs=self.input_[:,i,:],
                     enc_state, 
                     cell=encoder_cell, 
-                    sequence_length=self.config['sequ_length_in']
+                    sequence_length=self.config['sequ_length_in'],
                     loop_function=lf,
                     initial_state=state ) # Decoder
                     
 
-              outputs_all.append(output)
+            outputs_all.append(output)
             self.final_state = state
 
             outputs_all_stacked = tf.stack(outputs_all,axis=1)

@@ -8,8 +8,8 @@ import keras
 from keras import backend as K # RAH If we want to use Keras and tf together.
 import utils
 
-from model import RNNModel
-from model import Seq2seqModel # RAH That would be our new model
+from model import BasicLSTMModel
+from model import Seq2SeqModel 
 from load_data import MotionDataset
 
 def load_data(config, split):
@@ -45,7 +45,7 @@ def get_model_and_placeholders(config):
                     'state_2': state_2 }
 
     # RAH Choose between the available models and initiate class accordingly
-    if config['which_model'] is 'LSTM':
+    if config['which_model'] is 'BasicLSTM':
         rnn_model_class = BasicLSTMModel
         return rnn_model_class, placeholders
     elif config['which_model'] is 'MultiLSTM':
@@ -93,11 +93,11 @@ def main(config):
             data_train.target[ s ] = data_train.target[ s ][ :, dim_to_use ]
         for s in range(0,len(data_valid.target)):    
             data_valid.target[ s ] = data_valid.target[ s ][ :, dim_to_use ]
+        print("standardization of data done.")    
     
     config['input_dim'] = data_train.input_[0].shape[-1] 
     config['output_dim'] = data_train.target[0].shape[-1]
     print('input shape: ', data_train.input_[0].shape)
-    print("standardization of data done.")
 
     
     if config['one_hot']:
