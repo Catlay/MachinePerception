@@ -194,7 +194,7 @@ def one_hot_encoding( data, labels):
   return data_onehot
 
 
-def standardize_data( data, data_mean, data_std, dim_to_use, one_hot ):
+def standardize_data( data, data_mean, data_std, dim_to_ignore, one_hot ):
   """
   Standardize input data by getting rid of unused dimensions, subtracting the mean and
   dividing by the standard deviation
@@ -212,8 +212,9 @@ def standardize_data( data, data_mean, data_std, dim_to_use, one_hot ):
     # No one-hot encoding... no need to do anything special
   for s in range(0,len(data)):
     data_out[s] = np.divide( (data[s]-data_mean), data_std )
-    data_out[s] = data_out[s][ :, dim_to_use ]
+    #data_out[s][ :, dim_to_ignore ] = 0
 
+  print('utils, data_out: ', data_out[0])
   return data_out
 
 
@@ -245,7 +246,7 @@ def standardization_stats(completeData):
 
   return data_mean, data_std, dimensions_to_ignore, dimensions_to_use
 
-def unStandardizeData(normalizedData, data_mean, data_std, dimensions_to_ignore, one_hot ):
+def unStandardizeData(dataTrain, standardizedData, data_mean, data_std, dim_to_ignore, one_hot ):
   """  Adapted from Martinez:
   Args
     normalizedData: nxd matrix with normalized data
@@ -257,26 +258,31 @@ def unStandardizeData(normalizedData, data_mean, data_std, dimensions_to_ignore,
   Returns
     origData: data originally used to
   """
-  T = normalizedData.shape[0]
+  standardizedData = standardizedData[0]
+  print('shape: ', standardizedData.shape)
+  T = standardizedData.shape[0]
   D = data_mean.shape[0]
-
-  origData = np.zeros((T, D), dtype=float32)
+  print('data mean shape: ', D)
+  
+  origData = np.zeros((T, D), dtype=np.float32)
+  '''
   dimensions_to_use = []
   for i in range(D):
     if i in dimensions_to_ignore:
       continue
     dimensions_to_use.append(i)
   dimensions_to_use = np.array(dimensions_to_use)
-
+  '''
   if one_hot:
-    origData[:, dimensions_to_use] = normalizedData[:, :-14] # 14 is number of actions
+    origData[:, dimensions_to_use] = standardizedData[:, :-14] # 14 is number of actions
   else:
-    origData[:, dimensions_to_use] = normalizedData
+    standardizedData[ :, dim_to_ignore ] = 0
 
-  # potentially ineficient, but only done once per experiment
+  # potentially inefficient...
   stdMat = data_std.reshape((1, D))
   stdMat = np.repeat(stdMat, T, axis=0)
   meanMat = data_mean.reshape((1, D))
   meanMat = np.repeat(meanMat, T, axis=0)
   origData = np.multiply(origData, stdMat) + meanMat
+  print('origData shape: ', origData.shape)
   return origData

@@ -4,11 +4,10 @@ import tensorflow as tf
 import time
 from config import train_config
 import numpy as np 
-import keras
-from keras import backend as K # RAH If we want to use Keras and tf together.
 import utils
 
 from model import BasicLSTMModel
+from model import MultiLSTMModel
 from model import Seq2SeqModel 
 from load_data import MotionDataset
 
@@ -32,7 +31,7 @@ def get_model_and_placeholders(config):
     
     state_1 = tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_1')
     state_2 = tf.placeholder(tf.float32,[None,config['hidden_states']],name='state_2')
-
+    init_state = tf.placeholder(tf.float32,[config['num_layers'], 2, None, config['hidden_states']], name='init_state')
     #enc_in = tf.placeholder(dtype, shape=[None, config['sequ_length_in']-1, input_dim], name="enc_in")
     #dec_in = tf.placeholder(dtype, shape=[None, config['sequ_length_in'], input_dim], name="dec_in")
     #dec_out = tf.placeholder(dtype, shape=[None, config['sequ_length_out'], input_dim], name="dec_out")
@@ -42,7 +41,9 @@ def get_model_and_placeholders(config):
                     'seq_lengths_pl': seq_lengths_pl,
                     'mask_pl': mask_pl,
                     'state_1': state_1,
-                    'state_2': state_2 }
+                    'state_2': state_2,
+                    'init_state': init_state
+                    }
 
     # RAH Choose between the available models and initiate class accordingly
     if config['which_model'] is 'BasicLSTM':
@@ -82,17 +83,25 @@ def main(config):
 
         train_set = []
         valid_set = []
+        target_train = []
+        target_valid = []
         # RAH Standardization -- subtract mean, divide by stdev
-        train_set  = utils.standardize_data( data_train.input_, data_mean, data_std, dim_to_use, config['one_hot'] )
-        valid_set  = utils.standardize_data( data_valid.input_,  data_mean, data_std, dim_to_use, config['one_hot'] )
+        train_set  = utils.standardize_data( data_train.input_, data_mean, data_std, dim_to_ignore, config['one_hot'] )
+        valid_set  = utils.standardize_data( data_valid.input_,  data_mean, data_std, dim_to_ignore, config['one_hot'] )
+        target_train  = utils.standardize_data( data_train.target, data_mean, data_std, dim_to_ignore, config['one_hot'] )
+        target_valid  = utils.standardize_data( data_valid.target,  data_mean, data_std, dim_to_ignore, config['one_hot'] )
 
         data_train.input_ = train_set
+        data_train.target = target_train
         data_valid.input_ = valid_set
-        # RAH we cannot devide by std if std=0, ignore those dimensions, also in target
+        data_valid_target = target_valid
+        '''
+        # RAH we cannot devide by std if std=0, ignore those dimensions, also in valid??
         for s in range(0,len(data_train.target)):
             data_train.target[ s ] = data_train.target[ s ][ :, dim_to_use ]
         for s in range(0,len(data_valid.target)):    
             data_valid.target[ s ] = data_valid.target[ s ][ :, dim_to_use ]
+        '''
         print("standardization of data done.")    
     
     config['input_dim'] = data_train.input_[0].shape[-1] 
