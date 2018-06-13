@@ -72,6 +72,10 @@ class BasicLSTMModel(object):
         #******************************************************************
         with tf.variable_scope('rnn_model', reuse=self.reuse):
 
+            cell = tf.contrib.rnn.GRUCell( self.config['hidden_states'] )
+            cell = tf.contrib.rnn.MultiRNNCell( 
+                [tf.contrib.rnn.GRUCell(self.config['hidden_states']) for _ in range(self.config['num_layers'] )])
+
             lstm = tf.contrib.rnn.BasicLSTMCell(self.config['hidden_states'])
             outputs_all = []
          
@@ -456,7 +460,7 @@ class Seq2SeqModel(object):
             _, enc_state = tf.contrib.rnn.static_rnn(cell, enc_in, dtype=tf.float32) # Encoder
             output, self.states = tf.contrib.legacy_seq2seq.rnn_decoder( dec_in, enc_state, mcell, loop_function=lf ) # Decoder
             
-# **************************MultiCell LSTM**************** 
+            # **************************MultiCell LSTM**************** 
             states_all_stacked = tf.stack(state,axis=1)
             print ('states stacked',states_all_stacked.get_shape())
             self.final_state = states_all_stacked
@@ -464,7 +468,7 @@ class Seq2SeqModel(object):
   
             outputs_all_unroll = tf.reshape(output,[self.config['batch_size_dim']*(self.config['time_stamp']),self.config['hidden_states']])
             print ('outputuunroll',outputs_all_unroll.get_shape())
-# ******************************************  
+            # ******************************************  
 
         with tf.variable_scope('output', reuse=self.reuse): 
             W = tf.get_variable(name='W',shape=[self.config['hidden_states'],self.config['output_dim']],initializer=tf.contrib.layers.xavier_initializer())
