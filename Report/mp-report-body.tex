@@ -93,7 +93,7 @@ norms to a factor of 5, so that we limit the magnitude of gradients and the Adam
 			Parameter& Value \\
 		\hline
      	\hline
-		Learning rate  &  0.0015 fixed    \\
+		Learning rate  &  0.00015 fixed    \\
 		Batch Size  & 10 \\
 		Optimizer  & Adam  \\
 		Epochs  & 9 \\
@@ -105,7 +105,7 @@ norms to a factor of 5, so that we limit the magnitude of gradients and the Adam
 
 \section{Conclusion}
 
-
+To sum up, one improvement that is suggested is to use sequential models for the prediciton of Human Motion. The movements human body is performing is sequential, meaning in each frame there is dependecy from the previous and also the sequential model will be able to mimic these dynamics of the human motion.Therefore we propose as a next improvement that the state of the art unrolled LSTM is replaced with a seq2seq model. 
 \begin{acks}
 	The authors would like to thank Prof. Dr. Otmar Hilliges for providing the theoretical background needed for this work and his assistants for the skeleton code that allowed us to focus on the most interesting aspects of the task.
 	
