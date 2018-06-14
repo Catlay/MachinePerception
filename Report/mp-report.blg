@@ -9,7 +9,7 @@ I was expecting a `,' or a `}'---line 239 of file bibliography.bib
  :  url       = "http://arxiv.org/abs/1508.00271"
  :                                               ",
 I'm skipping whatever remains of this entry
-I was expecting a `,' or a `}'---line 259 of file bibliography.bib
+I was expecting a `,' or a `}'---line 267 of file bibliography.bib
  :  eprint   = 1409
  :                 .3215",
 I'm skipping whatever remains of this entry
@@ -23,48 +23,49 @@ Warning--page numbers missing in both pages and numpages fields in Fragkiadaki20
 Warning--empty publisher in Martinez2017
 Warning--empty address in Martinez2017
 Warning--page numbers missing in both pages and numpages fields in Martinez2017
+Warning--empty year in Olah2015
 Warning--empty year in Sutskever2014
 Warning--no number and no volume in Sutskever2014
 Warning--page numbers missing in both pages and numpages fields in Sutskever2014
-You've used 4 entries,
+You've used 5 entries,
             5732 wiz_defined-function locations,
-            1475 strings with 17232 characters,
-and the built_in function-call counts, 4439 in all, are:
-= -- 585
-> -- 175
+            1481 strings with 17363 characters,
+and the built_in function-call counts, 5118 in all, are:
+= -- 651
+> -- 195
 < -- 0
-+ -- 56
-- -- 52
-* -- 344
-:= -- 439
-add.period$ -- 19
-call.type$ -- 4
-change.case$ -- 31
-chr.to.int$ -- 4
-cite$ -- 12
-duplicate$ -- 358
-empty$ -- 263
-format.name$ -- 68
-if$ -- 1108
++ -- 61
+- -- 60
+* -- 383
+:= -- 525
+add.period$ -- 24
+call.type$ -- 5
+change.case$ -- 36
+chr.to.int$ -- 5
+cite$ -- 14
+duplicate$ -- 417
+empty$ -- 308
+format.name$ -- 76
+if$ -- 1257
 int.to.chr$ -- 2
 int.to.str$ -- 1
 missing$ -- 17
-newline$ -- 81
-num.names$ -- 32
-pop$ -- 183
+newline$ -- 93
+num.names$ -- 40
+pop$ -- 220
 preamble$ -- 1
-purify$ -- 59
+purify$ -- 67
 quote$ -- 0
-skip$ -- 95
+skip$ -- 114
 stack$ -- 0
-substring$ -- 215
-swap$ -- 21
+substring$ -- 247
+swap$ -- 26
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 78
-warning$ -- 8
-while$ -- 16
+type$ -- 108
+warning$ -- 9
+while$ -- 24
 width$ -- 0
-write$ -- 112
+write$ -- 132
 (There were 2 error messages)

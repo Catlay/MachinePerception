@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.30)  8 JUN 2018 10:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.30)  14 JUN 2018 23:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -942,28 +942,28 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 17.28pt on input line 24.
+(Font)              scaled to size 17.28pt on input line 22.
 LaTeX Font Info:    Try loading font information for T1+LinuxBiolinumT-TLF on i
-nput line 24.
+nput line 22.
 
 (/usr/share/texlive/texmf-dist/tex/latex/libertine/T1LinuxBiolinumT-TLF.fd
 File: T1LinuxBiolinumT-TLF.fd 2017/03/20 (autoinst) Font definitions for T1/Lin
 uxBiolinumT-TLF.
 )
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 17.28pt on input line 24.
+(Font)              scaled to size 17.28pt on input line 22.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `LinuxBiolinumT-TLF' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/b/n' will be
-(Font)              scaled to size 17.28pt on input line 24.
+(Font)              scaled to size 17.28pt on input line 22.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 12.0pt on input line 24.
+(Font)              scaled to size 12.0pt on input line 22.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 24.
+(Font)              scaled to size 10.0pt on input line 22.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 24.
+(Font)              scaled to size 10.0pt on input line 22.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `LinuxLibertineT-TLF' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
@@ -976,24 +976,52 @@ File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 9.0pt on input line 24.
+(Font)              scaled to size 9.0pt on input line 22.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 10.95pt on input line 24.
-LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 24.
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 7.3pt on input line 24.
+(Font)              scaled to size 10.95pt on input line 22.
 
 
 Package hyperref Warning: Option `pdflang' has already been used,
-(hyperref)                setting the option has no effect on input line 24.
+(hyperref)                setting the option has no effect on input line 22.
 
 
 Package hyperref Warning: Option `pdfdisplaydoctitle' has already been used,
-(hyperref)                setting the option has no effect on input line 24.
+(hyperref)                setting the option has no effect on input line 22.
 
 (./mp-report-body.tex
-Underfull \hbox (badness 10000) in paragraph at lines 19--20
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+
+ []
+
+
+Underfull \vbox (badness 6542) has occurred while \output is active []
+
+<Prediciton_achitecture.PNG, id=62, 875.52094pt x 452.4403pt>
+File: Prediciton_achitecture.PNG Graphic file (type png)
+<use Prediciton_achitecture.PNG>
+Package pdftex.def Info: Prediciton_achitecture.PNG  used on input line 43.
+(pdftex.def)             Requested size: 227.62204pt x 117.6248pt.
+<Training_architecture.PNG, id=64, 892.08281pt x 507.39563pt>
+File: Training_architecture.PNG Graphic file (type png)
+<use Training_architecture.PNG>
+Package pdftex.def Info: Training_architecture.PNG  used on input line 53.
+(pdftex.def)             Requested size: 227.62204pt x 129.46547pt.
+ [1.1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+
+ <./Prediciton_achitecture.PNG> <./Training_architecture.PNG>]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 64.
+
+LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 9.0pt on input line 68.
+
+Underfull \hbox (badness 10000) in paragraph at lines 109--110
 
  []
 
@@ -1005,48 +1033,45 @@ Straight input of comment.cut. (./comment.cut)) (./mp-report.bbl
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 7.0pt on input line 48.
 LaTeX Info: Redefining \tempurl on input line 69.
- [1.1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
-
-])
+LaTeX Info: Redefining \tempurl on input line 93.
+)
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 31.
- [2.2
+(Font)              scaled to size 9.0pt on input line 29.
+ [2.2]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 29.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 29.
 
-]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 31.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 31.
- (./mp-report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 31.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 31.
+(./mp-report.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 29.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 29.
 Package rerunfilecheck Info: File `mp-report.out' has not changed.
-(rerunfilecheck)             Checksum: D20496DA6927535FA9F421E70AC97D09;1280.
+(rerunfilecheck)             Checksum: BA0E53B55084FBEB3D5C6D537E4E4CD2;1862.
  )
 (\end occurred inside a group at level 1)
 
-### semi simple group (level 1) entered at line 24 (\begingroup)
+### semi simple group (level 1) entered at line 22 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 17694 strings out of 492982
- 264321 string characters out of 6134896
- 382279 words of memory out of 5000000
- 20663 multiletter control sequences out of 15000+600000
- 93767 words of font info for 138 fonts, out of 8000000 for 9000
+ 17745 strings out of 492982
+ 265373 string characters out of 6134896
+ 382472 words of memory out of 5000000
+ 20686 multiletter control sequences out of 15000+600000
+ 90238 words of font info for 149 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 60i,11n,94p,819b,658s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_2
-5tcsq.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.
+ 60i,11n,94p,986b,498s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_7
+grukw.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.
 enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}{/
 usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}</usr/sh
 are/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinumT.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/newtx/txsys.pfb>
-Output written on mp-report.pdf (2 pages, 330879 bytes).
+texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb>
+Output written on mp-report.pdf (2 pages, 428624 bytes).
 PDF statistics:
- 117 PDF objects out of 1000 (max. 8388607)
- 97 compressed objects within 1 object stream
- 22 named destinations out of 1000 (max. 500000)
- 29277 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 141 PDF objects out of 1000 (max. 8388607)
+ 118 compressed objects within 2 object streams
+ 29 named destinations out of 1000 (max. 500000)
+ 28791 words of extra memory for PDF output out of 29859 (max. 10000000)
 

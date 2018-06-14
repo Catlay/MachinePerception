@@ -260,6 +260,15 @@ class MotionDataset(Dataset, Feeder):
         else:
             target = [np.concatenate([np.copy(x[1:]), np.copy(x[-1:])], axis=0) for x in all_angles]
 
+        #*****Gradient****************************************************************************************
+        #print('I want to know the shape of target here: ', target[0].shape)
+        #print('I want to know the shape of input here: ', input_[0].shape)
+        """
+        for b in input_:
+            for column in input_[b].T:    
+                input_[b] = np.diff(input_[b,i])
+                    
+        """  
         obj = cls(input_, target, all_ids, all_action_labels, batch_size, rng)
         return obj
 

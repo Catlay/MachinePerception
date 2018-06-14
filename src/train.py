@@ -239,7 +239,7 @@ def main(config):
                 # get the feed dict for the current batch
                 feed_dict = rnn_model.get_feed_dict(batch)
                 print('feed dict done')
-                print(feed_dict.keys())
+                #print(feed_dict.keys())
                 
                 # feed data into the model and run optimization
                 training_out = sess.run(fetches, feed_dict)

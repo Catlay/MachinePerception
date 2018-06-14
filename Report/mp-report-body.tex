@@ -3,9 +3,12 @@
 % Our report - template is at the end of file as reference
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Preprocesssing and representation}
+
+
 \section{Introduction}
 
-Motion prediction is one of the tasks that is automatically done by humans but very hard to accomplish by machines. While even insects already have a physical model of the world, either learnt or predefined, we have to teach it to machines. There are many applications nowaday that are based on human motion data analysis like human-computer interaction, motion synthesis, motion prediction for virtual and augmented reality, automated driving, biomedical engineering applications.
+Motion prediction is one of the tasks that is automatically done by humans but very hard to accomplish by machines. While even insects already have a physical model of the world, either learnt or predefined, we have to teach it to machines. There are many applications nowadays that are based on human motion data analysis like human-computer interaction, motion synthesis, motion prediction for virtual and augmented reality, automated driving, biomedical engineering applications etc.
 Using a state of the art unrolled LSTM cell we build the most basic RNN network for human motion prediction and took this as our baseline for improvements. 
 
 \section{Related work}
@@ -19,7 +22,7 @@ Sutskever 2014 (Sequence to sequence learning with neural networks): Deep LSTM's
 
 Millinges et al:
 
-
+Olah: \cite{Olah2015} \\
 
 
 Buetepage: \cite{Buetepage2017}
@@ -27,85 +30,102 @@ Buetepage: \cite{Buetepage2017}
 
 
 \section{Methodology}
-
-Input from assistant (Manuel Kaufmann): 
-\begin{itemize}
-	\item We won't be able to beat the hard baseline with a simple RNN cell (which I guessed after several runs with many different paramenters and I couldn't even beat your score)
-	\item We should implement Seq2seq model
-	\item Normalization/Standardization important
-	\item One of the tasks of this exercise is to figure out if one-hot encoding of activity improves the performance	
-\end{itemize}
-
-
-
-What I have done so far: I'm slow in python, sorry for that...
-\begin{itemize}
-	\item Pushed your code to master
-	\item Created new branch where I did all the changes.
-	\item Wrote function in util.py to get mean, std, and dIlya Sutskever 2014: \\imensions where std is smaller than 10e-4
-	\item Wrote function in util.py to standardize data
-	\item If preprocess is on, we standardize input data and ignore the dimensions where std is almost zero, we also ignore those dimensions in the target. Test/eval still to do...
-	\item One-hot encoding of activity labels. Has to be done after standardize data. Wrote the function to add one-hot vector. Need to get rid of those rows for validation error.
-	\item Added model class for many layer LMTS with dropout option, but haven't tested model yet.
-	\item Trying to figure out how to implement easy sequence to sequence model as another model class.
-\end{itemize}
-
-Additional comments: 
-
-
-
+ 
 \subsection{Preprocesssing and representation}
 
-In the project of Human Motion, the architecture we used to solve the problem 
-is based on RNN architecture using LSTM networks. We created an unrolled LSTM network that in each time step is being trained 
-to predict the next pose. This can be seen also in training architecture, where the red poses are the predicted poses fromt he LSTM architecture
-and the greenones are the ground truths, meaning the real-true positions from the training data.
-The loss we used wa sthe L2 loss to minimize. We tried also some other distance functions, like the cosine loss, but this didnt help a lot and the 
-vlaidation error was the same or a bit worse compared to the L2 norm, therefore we prefered the L2 loss.
-Also we used SGD, stochastic gradient descent and the ADAM optimizer to solve the optimization problem in the training process. We clipped also the 
-norms to a factor of 5, so that we limit the magnitude of gradients and the Adam optimizer descends indeed to a minimum.
+Preprocessing the data before feeding them into the network is understood to be advantageous. However, for our RNN standardization of the input data would not lead to the best performing model. We standardized the data by subtracting the mean value of each joint and also divided by the standard deviation. One point worth mentioning is that some joints had zero standard deviation, meaning that the training data set were not changing at all for these angles, therefore we decided to discard them and not use them in the analysis. This led to an input with 51 angles instead of 75. If the test set is coming from the same distribution, we could expect that the same angles also in the test set have 0 std so they can be removed from the LSTM  analysis and for the test purposes just keep the last frame of these angles as the predicted one. We did not see any improvements of the performance of our LSTM model compared to non-standardized inputs.
 
-\includegraphics[width=5cm,height=5cm]{Prediciton_achitecture.PNG}
-
-\includegraphics[width=5cm,height=5cm]{Training_architecture.PNG}
 \subsection{Network structure}
- 
- \begin{enumerate}
- 	\item Standardization
- 	\item One-hot encoding
- 	\item One to multilayer LSTM
- 	\item With /without dropout
- 	\item Seq2Seq model
- \end{enumerate}
 
-\section{Experiments}
+\subsubsection{Single layer LSTM}
+In this project, the architecture we used to solve the problem of motion prediction is based on a RNN architecture using LSTM cells. We created an unrolled LSTM network that in each time step is being trained to predict the next pose. Therefore we identified the problem as a regression task, where we construct the predicted poses in the continuous angles-space. This can be seen also in Figure \ref{fig:training}, where the red poses are the predicted poses from the LSTM architecture and the green poses are the ground truth, which is in our case the real-true positions from the training data.
+
+\begin{figure}[h!]
+	\includegraphics[width=8cm]{Training_architecture.PNG}
+	\caption{Training architecture}
+	\label{fig:training}
+\end{figure}
+
+
+The loss function we used was the mean squared error function (L2 loss) to calculate the prediction error for the training sequence. Other distance functions, like the cosine loss, did not improve the performance of the model on the validation set or even gave worse results. 
+
+To solve the optimization problem in the training process, we used stochastic gradient descent (SGD) and the ADAM optimizer. Also here, changing to another optimizer or adjusting the settings, such as epsilon, would not improve our model performance. We clipped the gradient norm to a factor of 5, so that we limit the magnitude of the gradients. With such a configuration, the Adam optimizer descends indeed to a minimum.
+
+\begin{figure}[h!]
+	\includegraphics[width=8cm]{Prediciton_achitecture.PNG}
+	\caption{Prediction architecture}
+	\label{fig:prediction}
+\end{figure}
+
+
+
+In the following table the parameters of the LSTM architecture are summarized. The training progress show us that after 10 epochs there was not substantial decrease in validation error. To avoid overfitting, our final submission is with 9 epochs.
 
 \begin{table}[]
 	\centering
 	\caption{Value of the Parameters }
 	\label{my-label}
 	\begin{tabular}{cc}
-			Parameter& Value \\
+		Parameter& Value \\
 		\hline
-     	\hline
+		\hline
 		Learning rate  &  0.0015 fixed    \\
 		Batch Size  & 10 \\
 		Optimizer  & Adam  \\
 		Epochs  & 9 \\
 		Max Length size  &  600 \\
-		Clipping grads &  5\\
+		Clipping gradient &  5\\
 		\hline
 	\end{tabular}
 \end{table}
 
+Figure \ref{fig:training}
+
+\subsection{Multilayer LSTM with dropout}
+
+It is possible to stack layers of LSTM cells on top of each other – this increases the model complexity and predictive power but at the expense of training times and difficulties. 
+
+
+\subsection{Failed approaches to improve model}
+
+Mulitlayer network with and without dropout. Dropout makes models in general more robust but is more useful for deep networks. Which we could experience as dropout would not improve our validation error, even after 12 epochs. We believe, however, that dropout can add robustness to the model if another architecture was chosen.
+
+
+\section{Experiments}
+ 
+
+
 \section{Conclusion and Outlook}
-\begin{itemize}
-	\item Seq2seq model?
+Our network performed reasonably well for its simplicity. Tuning the hyper-parameters, optimizer or loss function would not have a significant influence on the performance. Adding more layers and dropout could not improve the model. This is in line what we expect from the literature. 
+
+The obvious architecture that is outperforming the LSTM network is a sequence to sequence architecture, where two networks are trained: an encoder generates an internal representation of the input, which is fed to the decoder. The decoder produces a maximum likelhood estimation for the prediction. One of the obvious advantages is that we train the model for exactly the task that it should carry out in the test. As the seq2seq architecture is heavily used in machine translation, there are several options to improve the architecture also for motion prediction, such as attention or bidirectional architectures. 
+
+To sum up, one improvement that is suggested is to use sequential models for the prediciton of Human Motion. The movements of human body is performing is sequential, meaning in each frame there is dependecy from the previous and also the sequential model will be able to mimic these dynamics of the human motion.Therefore we propose as a next improvement that the state of the art unrolled LSTM is replaced with a seq2seq model.
+
+Another preprocessing step would be to add Gaussian noise to the angles as has been done in previous work \cite{Fragkiadaki2014}. This makes the LSTM more robust and can help to avoid overfitting. However, the robustness comes with the price of having another hyperparameter to tune: the standard deviation of the Gaussian noise. Another solution to increase robustness of the model is to feed into the decoder its own produced samples. This comes without any parameter to tune and yields good results \cite{Martinez2017}.
+
+Human motion is dynamic and not static and human motion can be better expressed in velocities than in positions. Previous work has taken this into account and used a residual connection to have the first frame prediction continuous \cite{Martinez2017} as many architecture suffer from a unreasonable first step when the prediction starts. 
+
+Going one step ahead would be to feed into the model the 
+
+Predicting only what has been seen \\
+
+Adversarial network to check how human-like motion is and generating in the first place only such movements.
+
+ 
+
+
+ \begin{enumerate}
+	\item Standardization
+	\item One-hot encoding
+	\item One to multilayer LSTM
+	\item With /without dropout
+	\item Seq2Seq model
 	\item Human motion is dynamic. I would love to use velocity and acceleration in the model. But this is probably too hard to do.
-\end{itemize}
+ \end{enumerate}
 
 \begin{acks}
-	The authors would like to thank Prof. Dr. Otmar Hilliges for providing the theoretical background needed for this work and his assistants for the skeleton code that allowed us to focus on the most interesting aspects of the task.
+	The authors would like to thank Prof. Dr. Otmar Hilliges for providing the theoretical background needed for this work and his assistants for the skeleton code that allowed us to focus on the more interesting aspects of the task.
 	
 	The work is carried out in the frame of the lecture "Machine Perception" at ETH Zurich in the spring semester 2018.
 	

@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{4}
+\begin{thebibliography}{5}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -80,6 +80,19 @@
 \newblock \showarticletitle{On human motion prediction using recurrent neural
   networks}. In \bibinfo{booktitle}{\emph{CVPR}}.
 \newblock
+
+
+\bibitem[\protect\citeauthoryear{Olah}{Olah}{[n. d.]}]%
+        {Olah2015}
+\bibfield{author}{\bibinfo{person}{Christopher Olah}.} \bibinfo{year}{[n.
+  d.]}\natexlab{}.
+\newblock \bibinfo{title}{Understanding LSTM Networks}.
+\newblock
+\newblock
+\urldef\tempurl%
+\url{http://colah.github.io/posts/2015-08-Understanding-LSTMs/}
+\showURL{%
+\tempurl}
 
 
 \bibitem[\protect\citeauthoryear{Sutskever, Vinyals, and Le}{Sutskever

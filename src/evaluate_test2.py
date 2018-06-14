@@ -73,10 +73,10 @@ def main(config):
             # no need to pad the batch because in the test set all batches have the same length
             input_=input_all[i]
 
-            print('Input shape',input_.shape)
+            #print('Input shape',input_.shape)
            
-            print('shape seq',seq_leng[i].size)
-            print('type',len([input_[0]]))
+            #print('shape seq',seq_leng[i].size)
+            #print('type',len([input_[0]]))
             # here we are requesting the final state as we later want to supply this back into the RNN
             # this is why the model should have a member `self.final_state`
             fetch = [rnn_model.final_state,rnn_model.predictions]

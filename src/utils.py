@@ -195,7 +195,7 @@ def one_hot_encoding( data, labels):
 
 
 def standardize_data( data, data_mean, data_std, dim_to_ignore, one_hot ):
-  """
+  """ Adapted from Martinez:
   Standardize input data by getting rid of unused dimensions, subtracting the mean and
   dividing by the standard deviation
 
@@ -219,7 +219,7 @@ def standardize_data( data, data_mean, data_std, dim_to_ignore, one_hot ):
 
 
 def standardization_stats(completeData):
-  """"  RAH: Adapted from Martinez.
+  """" Adapted from Martinez.
   Args
     completeData: list of arrays with data to standardize
   Returns
