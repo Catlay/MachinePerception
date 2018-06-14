@@ -68,7 +68,11 @@ and the greenones are the ground truths, meaning the real-true positions from th
 The loss we used wa sthe L2 loss to minimize. We tried also some other distance functions, like the cosine loss, but this didnt help a lot and the 
 vlaidation error was the same or a bit worse compared to the L2 norm, therefore we prefered the L2 loss.
 Also we used SGD, stochastic gradient descent and the ADAM optimizer to solve the optimization problem in the training process. We clipped also the 
-norms to a factor of 5, so that we limit the magnitude of gradients and the Adam optimizer descends indeed to a minimum. For the initialization  of the weights parameters of the LSTM model we used the Xavier initialization.
+norms to a factor of 5, so that we limit the magnitude of gradients and the Adam optimizer descends indeed to a minimum. For the initialization  of the weights parameters of the LSTM model we used the Xavier initialization. 
+
+Moreover, regarding the preprocessing, we tried to standarize the data by subtracking the mean value of each joint and also divided by standard deviation. One point worth mentioning is that some joints had zero standard deviation, meaning that the training data set were not changing at all at these angles, therefore we decided for angles with 0 std, not to use them at the analyis. This end up to an LSTM of 51 angles instead of 75. If the test set is coming from the same distribution, we could expect that the same angles also in the test set have 0 std so they can be removed fromt he LSTM  analysis and for the test purposes just keep the last frame of these angles as the predicted one.
+
+Another preprocessing step would be to add gaussian noise to the angles. This would make the LSTM more robust and would help to avoid overfitting.
 
 \includegraphics[width=5cm,height=5cm]{Prediction_achitecture.PNG}
 
@@ -99,13 +103,14 @@ norms to a factor of 5, so that we limit the magnitude of gradients and the Adam
 		Epochs  & 9 \\
 		Max Length size  &  600 \\
 		Clipping grads &  5\\
+		Prediction length &  25\\
 		\hline
 	\end{tabular}
 \end{table}
 
 \section{Conclusion}
 
-To sum up, one improvement that is suggested is to use sequential models for the prediciton of Human Motion. The movements human body is performing is sequential, meaning in each frame there is dependecy from the previous and also the sequential model will be able to mimic these dynamics of the human motion.Therefore we propose as a next improvement that the state of the art unrolled LSTM is replaced with a seq2seq model. 
+To sum up, one improvement that is suggested is to use sequential models for the prediciton of Human Motion. The movements of human body is performing is sequential, meaning in each frame there is dependecy from the previous and also the sequential model will be able to mimic these dynamics of the human motion.Therefore we propose as a next improvement that the state of the art unrolled LSTM is replaced with a seq2seq model. 
 \begin{acks}
 	The authors would like to thank Prof. Dr. Otmar Hilliges for providing the theoretical background needed for this work and his assistants for the skeleton code that allowed us to focus on the most interesting aspects of the task.
 	
