@@ -51,12 +51,7 @@ What I have done so far: I'm slow in python, sorry for that...
 \end{itemize}
 
 Additional comments: 
-\begin{itemize}
-	\item Our validation error goes down, but the performance on the test set does not improve at all. Why???
-	\item Standardization of data to zero mean and variance of 1: if std is close to zero, what shall we do? Martinez ignored those dimensions for training so that is what I did as well... Where do we need to do the de-normalization of the data?
-	\item Seq2seq model?
-	\item Human motion is dynamic. I would love to use velocity and acceleration in the model. But this is probably too hard to do.
-\end{itemize}
+
 
 
 \subsection{Preprocesssing and representation}
@@ -103,8 +98,11 @@ norms to a factor of 5, so that we limit the magnitude of gradients and the Adam
 	\end{tabular}
 \end{table}
 
-\section{Conclusion}
-
+\section{Conclusion and Outlook}
+\begin{itemize}
+	\item Seq2seq model?
+	\item Human motion is dynamic. I would love to use velocity and acceleration in the model. But this is probably too hard to do.
+\end{itemize}
 
 \begin{acks}
 	The authors would like to thank Prof. Dr. Otmar Hilliges for providing the theoretical background needed for this work and his assistants for the skeleton code that allowed us to focus on the most interesting aspects of the task.

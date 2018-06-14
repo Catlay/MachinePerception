@@ -256,7 +256,7 @@ class MultiLSTMModel(object):
             output, state = tf.nn.dynamic_rnn(mcell, self.input_, dtype=tf.float32, initial_state=rnn_tuple_state)
             print('shape output all: ', output.get_shape())
 
-            states_all_stacked = tf.stack(state,axis=1)
+            states_all_stacked = tf.stack(state,axis=0)
             print ('states stacked',states_all_stacked.get_shape())
             self.final_state = states_all_stacked
             print ('shape state Final is',self.final_state)
