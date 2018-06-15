@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{5}
+\begin{thebibliography}{6}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -67,6 +67,24 @@
 \newblock
 \urldef\tempurl%
 \url{http://arxiv.org/abs/1508.00271}
+\showURL{%
+\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Ghosh, Song, Aksan, and Hilliges}{Ghosh
+  et~al\mbox{.}}{2017}]%
+        {DBLP:journals/corr/GhoshSAH17}
+\bibfield{author}{\bibinfo{person}{Partha Ghosh}, \bibinfo{person}{Jie Song},
+  \bibinfo{person}{Emre Aksan}, {and} \bibinfo{person}{Otmar Hilliges}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Learning Human Motion Models for Long-term
+  Predictions}.
+\newblock \bibinfo{journal}{\emph{CoRR}}  \bibinfo{volume}{abs/1704.02827}
+  (\bibinfo{year}{2017}).
+\newblock
+\showeprint[arxiv]{1704.02827}
+\urldef\tempurl%
+\url{http://arxiv.org/abs/1704.02827}
 \showURL{%
 \tempurl}
 
