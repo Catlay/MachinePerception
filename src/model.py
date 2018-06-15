@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import utils
+import extensions
 
 class BasicLSTMModel(object):
     """
@@ -73,7 +74,7 @@ class BasicLSTMModel(object):
         with tf.variable_scope('rnn_model', reuse=self.reuse):
 
             lstm = tf.contrib.rnn.BasicLSTMCell(self.config['hidden_states'])
-            cell = rnn_cell_extensions.ResidualWrapper( lstm )
+            cell = extensions.ResidualWrapper( lstm )
             outputs_all = []
          
             state = self.state_1, self.state_2
@@ -84,7 +85,7 @@ class BasicLSTMModel(object):
               #print(i)
               if i>0:
                tf.get_variable_scope().reuse_variables()
-              output, state = cell(self.input_[:,i,:],state)
+              output, state = lstm(self.input_[:,i,:],state)
               print('RAW ouput',tf.convert_to_tensor(output).get_shape())
               outputs_all.append(output)
             print('shape outputs all: ', output.get_shape())
@@ -291,7 +292,7 @@ class MultiLSTMModel(object):
                 #print('target: ', self.target)
                 print('shape of prediction: ', self.predictions.get_shape())
                 mask1=tf.tile(tf.expand_dims(self.mask,axis=2), [1 , 1, self.config['output_dim']])             
-                error= tf.abs((self.target-self.predictions) )            
+                error= tf.abs((self.target-self.predictions) ) + tf.abs((self.input_-self.predictions))        
                 masked=tf.equal(mask1,0)
                 zeros=tf.zeros_like(error)
                 new_error=tf.where(masked,zeros,error)

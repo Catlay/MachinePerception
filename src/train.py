@@ -78,7 +78,7 @@ def main(config):
 
 
     if config['preprocess'] :
-
+        """
         data_mean, data_std, dim_to_ignore, dim_to_use = utils.standardization_stats(data_train.input_)
 
         train_set = []
@@ -107,10 +107,13 @@ def main(config):
     config['input_dim'] = data_train.input_[0].shape[-1] 
     config['output_dim'] = data_train.target[0].shape[-1]
     print('input shape: ', data_train.input_[0].shape)
-
+    """
     
     if config['one_hot']:
         data_train.target = utils.one_hot_encoding( data_train.input_, data_train.action_labels)
+        data_train.input_ = utils.one_hot_encoding( data_train.input_, data_train.action_labels)
+        data_valid.target = utils.one_hot_encoding( data_train.input_, data_train.action_labels)
+        data_valid.input_ = utils.one_hot_encoding( data_train.input_, data_train.action_labels)
 
 
     # *********************************************************************************

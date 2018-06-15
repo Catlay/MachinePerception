@@ -8,37 +8,28 @@
 
 \section{Introduction}
 
-Motion prediction is one of the tasks that is automatically done by humans but very hard to accomplish by machines. While even insects already have a physical model of the world, either learnt or predefined, we have to teach it to machines. There are many applications nowadays that are based on human motion data analysis like human-computer interaction, motion synthesis, motion prediction for virtual and augmented reality, automated driving, biomedical engineering applications etc.
+Motion prediction is one of the tasks that is automatically done by humans but very hard to accomplish by machines. While even insects already have a physical model of the world, either learnt or predefined, we have to teach how to predict motion to machines. There are many applications nowadays that are based on human motion data analysis like human-computer interaction, motion synthesis, motion prediction for virtual and augmented reality, automated driving, biomedical engineering applications etc.
 Using a state of the art unrolled LSTM cell we build the most basic RNN network for human motion prediction and took this as our baseline for improvements. 
 
 \section{Related work}
 Recent work focused on RNN based architectures to model human motion, with the goal of learning time-dependent representations that perform tasks such as short term motion prediction. 
 
-Fragkiadaki 2014: introduced an encoder-decoder (ERD) network, which is a type of recurrent neural network (RNN) model, that combines representation learning with learning temporal dynamics \cite{Fragkiadaki2014}. Also there the writers used some basic preprocessing, like standarization of data and adding noise to the input data so that the performance of the RNN base don LSTM technique is better.
+In 2014, an encoder-decoder (ERD) network based on LSTM was introduced, which is a type of recurrent neural network (RNN) model, that combines representation learning with learning temporal dynamics \cite{Fragkiadaki2014}. Basic preprocessing is done to increase performance and robustness of the network, like standarization of data and adding noise to the input data. Around the same time, a sequence to sequence architecture for language translation was proposed \cite{Sutskever2014} that would give the field a new direction. The network consists of an encoder and a decoder and would take as input one whole sentence. An extended sequence to sequence model was recently published \cite{Martinez2017}. It is proposed that weight sharing between encoder and decoder and using Gated Rectified Units (GRU) instead of LSTM as base cell simplifies the model but does not hurt final performance. A residual connection between input and output allows to use velocities in the network - a advantages add-on as human motion is dynamic and not static. 
 
-Julieta Martinez 2017: Trained encoder and decoder together with shared weights, single GRU. Used velocities through a residual architecture. Error reduction: fed predictions of the net back \cite{Martinez2017}. This work is similar to the techniques use din NLP, Natural Laguage Processing, as described in \cite{Sutskever2014}
+Good long-term results were obtained with a dubbed Dropout Autoencoder LSTM (DAE-LSTM) that can extract both structural and temporal dependencies directly from the training data ETH: \cite{Ghosh2017}. This network can produce long-term naturally looking poses without converging to mean. The autoencoder is trained to implicitly recover the spatial structure of the human skeleton via randomly removing information about joints during training. 
 
-Sutskever 2014 (Sequence to sequence learning with neural networks): Deep LSTM's significantly outperform shallow LSTMs. They used therefore 4 layers. They also reversed the order of word inputs and would then perform better on long sentences. Stochastic gradient, 7.5 epochs, same length of input vector in batches: speed up of training. Best result with ensemble of LSTM that differ in their random initialization and in the random order or minibatches. \cite{Sutskever2014}\\
-
-Millinges et al:
-
-Olah: \cite{Olah2015} \\
-
-
-Buetepage: \cite{Buetepage2017}
-
+A different approach shows that a feed-forward network can also compete with RNNs \cite{Buetepage2017}. 
 
 
 \section{Methodology}
  
 \subsection{Preprocesssing and representation}
 
-Preprocessing the data before feeding them into the network is understood to be advantageous. However, for our RNN standardization of the input data would not lead to the best performing model. We standardized the data by subtracting the mean value of each joint and also divided by the standard deviation. One point worth mentioning is that some joints had zero standard deviation, meaning that the training data set were not changing at all for these angles, therefore we decided to discard them and not use them in the analysis. This led to an input with 51 angles instead of 75. If the test set is coming from the same distribution, we could expect that the same angles also in the test set have 0 std so they can be removed from the LSTM  analysis and for the test purposes just keep the last frame of these angles as the predicted one. We did not see any improvements of the performance of our LSTM model compared to non-standardized inputs.
+Preprocessing the data before feeding them into the network is understood to be advantageous \cite{Fragkiadaki2014}. However, for our RNN standardization of the input data would not lead to the best performing model. We standardized the data by subtracting the mean value of each joint and also divided by the standard deviation. One point worth mentioning is that some joints had zero standard deviation, meaning that the training data set were not changing at all for these angles, therefore we decided to discard them and not use them in the analysis. This led to an input with 51 angles instead of 75. If the test set is coming from the same distribution, we could expect that the same angles also in the test set have 0 std so they can be removed from the LSTM  analysis and for the test purposes just keep the last frame of these angles as the predicted one. We did not see any improvements of the performance of our LSTM model compared to non-standardized inputs.
 
 \subsection{Network structure}
 
-\subsubsection{Single layer LSTM}
-In this project, the architecture we used to solve the problem of motion prediction is based on a RNN architecture using LSTM cells. We created an unrolled LSTM network that in each time step is being trained to predict the next pose. Therefore we identified the problem as a regression task, where we construct the predicted poses in the continuous angles-space. This can be seen also in Figure \ref{fig:training}, where the red poses are the predicted poses from the LSTM architecture and the green poses are the ground truth, which is in our case the real-true positions from the training data.
+In this project, the architecture we used to solve the problem of motion prediction is based on a RNN architecture using LSTM cells \cite{Olah2015}. We created an unrolled LSTM network that in each time step is being trained to predict the next pose . Therefore we identified the problem as a regression task, where we construct the predicted poses in the continuous angles-space. This can be seen also in Figure \ref{fig:training}, where the red poses are the predicted poses from the LSTM architecture and the green poses are the ground truth, which is in our case the real-true positions from the training data.
 
 \begin{figure}[h!]
 	\includegraphics[width=8cm]{Training_architecture.PNG}
@@ -46,6 +37,10 @@ In this project, the architecture we used to solve the problem of motion predict
 	\label{fig:training}
 \end{figure}
 
+
+\subsection{Experiment}
+
+Best result with ensemble of LSTM that differ in their random initialization and in the random order or minibatches.
 
 The loss function we used was the mean squared error function (L2 loss) to calculate the prediction error for the training sequence. Other distance functions, like the cosine loss, did not improve the performance of the model on the validation set or even gave worse results. 
 
@@ -56,7 +51,6 @@ To solve the optimization problem in the training process, we used stochastic gr
 	\caption{Prediction architecture}
 	\label{fig:prediction}
 \end{figure}
-
 
 
 In the following table the parameters of the LSTM architecture are summarized. The training progress show us that after 10 epochs there was no substantial decrease in validation error. To avoid overfitting, our final submission is with 6 epochs. A small batch size can help to step away from local minima. In our best run, we had a batch size of 10. 
@@ -81,41 +75,30 @@ In the following table the parameters of the LSTM architecture are summarized. T
 
 Figure \ref{fig:training}
 
-\subsection{Multilayer LSTM with dropout}
-
-It is possible to stack layers of LSTM cells on top of each other – this increases the model complexity and predictive power but at the expense of training times and difficulties. 
 
 
-\subsection{Failed approaches to improve model}
+\subsection{Failed approach}
 
-Mulitlayer network with and without dropout. Dropout makes models in general more robust but is more useful for deep networks. Which we could experience as dropout would not improve our validation error, even after 12 epochs. We believe, however, that dropout can add robustness to the model if another architecture was chosen.
+For language translation it was shown that deep LSTM's significantly outperform shallow LSTMs \cite{Sutskever2014}. An optimum was reached with a sequence to sequence architecture at 4 layers. 
 
+Stacking of LSTM cells increases the model complexity and predictive power but at the expense of training times and difficulties. We combined the LSTM cell with a drop-out and stacked those. Dropout was added as it makes models in general more robust. Dropout is more useful for deep networks, which can be the reason that dropout would not improve our validation error, even after 12 epochs. 
+It is well possible that we couldn't find the convergence point for this model, however, it would not perform better than our single layer LSTM architecture. The predictions were in the rough form very human like, also for the longer term prediction, but they were flickering or noisy.
 
-\section{Experiments}
- 
+Even though in this model we could not see an improvement,we belive however, that both stacking of more layers and dropout could increase model performance and add robustness to the model if another architecture was chosen. 
 
 
 \section{Conclusion and Outlook}
-Our network performed reasonably well for its simplicity. Tuning the hyper-parameters, optimizer or loss function would not have a significant influence on the performance. Adding more layers and dropout could not improve the model. This is in line what we expect from the literature. 
+Our network performed reasonably well for its simplicity. Tuning the hyper-parameters, optimizer or loss function would not have a significant influence on the performance. Adding more layers and dropout could not improve the model. This is in line what we could expect when consulting the literature. 
 
-The obvious architecture that is outperforming the LSTM network is a sequence to sequence architecture, where two networks are trained: an encoder generates an internal representation of the input, which is fed to the decoder. The decoder produces a maximum likelhood estimation for the prediction. One of the obvious advantages is that we train the model for exactly the task that it should carry out in the test. As the seq2seq architecture is heavily used in machine translation, there are several options to improve the architecture also for motion prediction, such as attention or bidirectional architectures. 
-
-To sum up, one improvement that is suggested is to use sequential models for the prediciton of Human Motion. The movements of human body is performing is sequential, meaning in each frame there is dependecy from the previous and also the sequential model will be able to mimic these dynamics of the human motion.Therefore we propose as a next improvement that the state of the art unrolled LSTM is replaced with a seq2seq model.
+The movements of human body are sequential, meaning in each frame there is a dependency from the previous. Therefore, the obvious architecture that is outperforming the LSTM network is a sequence to sequence (seq2seq) architecture, where two networks are trained: an encoder generates an internal representation of the input, which is fed to the decoder. The decoder produces a maximum likelhood estimation for the prediction. One of the obvious advantages is that  the model is trained for exactly the task that it should carry out in the test. As the seq2seq architecture is heavily used in machine translation, there are several options to improve the architecture also for motion prediction, such as attention or bidirectional architectures. 
 
 Another preprocessing step would be to add Gaussian noise to the angles as has been done in previous work \cite{Fragkiadaki2014}. This makes the LSTM more robust and can help to avoid overfitting. However, the robustness comes with the price of having another hyperparameter to tune: the standard deviation of the Gaussian noise. Another solution to increase robustness of the model is to feed into the decoder its own produced samples. This comes without any parameter to tune and yields good results \cite{Martinez2017}.
 
 Human motion is dynamic and not static and human motion can be better expressed in velocities than in positions. Previous work has taken this into account and used a residual connection to have the prediction continuous \cite{Martinez2017}. Many architectures suffer from a unreasonable first step when the prediction starts which can be avoided with the residual connection. A add-on to this model could include a further connection from the last input to the output that would teach the model about acceleration too. 
 
-Another interesting improvement could be to use an Adversarial network to produce many more samples. 
-
-Include a physical model. As humans we train the internal physical model every day by moving our own body.
-
-	
 
 \begin{acks}
-	The authors would like to thank Prof. Dr. Otmar Hilliges for providing the theoretical background needed for this work and his assistants for the skeleton code that allowed us to focus on the more interesting aspects of the task.
-	
-	The work is carried out in the frame of the lecture "Machine Perception" at ETH Zurich in the spring semester 2018.
+	The authors would like to thank Prof. Dr. Otmar Hilliges for providing the theoretical background needed for this work and his assistants for the skeleton code. The work was carried out in the frame of the lecture "Machine Perception" at ETH Zurich in the spring semester 2018.
 	
 \end{acks}
 
