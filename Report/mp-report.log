@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.30)  15 JUN 2018 12:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.30)  15 JUN 2018 12:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1047,11 +1047,11 @@ Package rerunfilecheck Info: File `mp-report.out' has not changed.
 ### semi simple group (level 1) entered at line 22 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 17771 strings out of 492982
- 266101 string characters out of 6134896
+ 17774 strings out of 492982
+ 266176 string characters out of 6134896
  380489 words of memory out of 5000000
  20687 multiletter control sequences out of 15000+600000
- 92968 words of font info for 169 fonts, out of 8000000 for 9000
+ 93241 words of font info for 171 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  60i,11n,94p,1102b,493s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_7
@@ -1063,7 +1063,7 @@ e/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb>
-Output written on mp-report.pdf (3 pages, 432033 bytes).
+Output written on mp-report.pdf (3 pages, 432109 bytes).
 PDF statistics:
  139 PDF objects out of 1000 (max. 8388607)
  115 compressed objects within 2 object streams
