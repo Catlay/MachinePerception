@@ -1,0 +1,29 @@
+% Use a modified ACM conference proceedings template
+\documentclass[sigconf]{acmart}
+% Disable some elements from ACM template
+\setcopyright{none}
+\settopmatter{printacmref=false,printfolios=false}
+
+\usepackage{booktabs} % For formal tables
+
+\begin{document}
+\title{Human Motion Prediction}
+
+\author{Maria Rozou}\affiliation{}
+\email{rozoum@student.ethz.ch}
+
+\author{Rahel Straessle}\affiliation{}
+\email{strrahel@student.ethz.ch}
+
+\begin{abstract}
+Recurrent Neural Networks are commonly used in natural language translation and also generation. In the recent years, they have shown good performance when applying them to human motion prediction tasks. 
+\end{abstract}
+
+\maketitle
+
+\input{mp-report-body}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{bibliography}
+
+\end{document}
