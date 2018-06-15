@@ -29,22 +29,14 @@ Preprocessing the data before feeding them into the network is understood to be 
 
 \subsection{Network structure}
 
-In this project, the architecture we used to solve the problem of motion prediction is based on a RNN architecture using LSTM cells \cite{Olah2015}. We created an unrolled LSTM network that in each time step is being trained to predict the next pose . Therefore we identified the problem as a regression task, where we construct the predicted poses in the continuous angles-space. This can be seen also in Figure \ref{fig:training}, where the red poses are the predicted poses from the LSTM architecture and the green poses are the ground truth, which is in our case the real-true positions from the training data.
+In this project, the architecture we used to solve the problem of motion prediction is based on a RNN architecture using LSTM cells \cite{Olah2015}. We created an unrolled LSTM network that in each time step is being trained to predict the next pose . Therefore we identified the problem as a regression task, where we construct the predicted poses in the continuous angles-space. This can be seen also in Figure \ref{fig:training}, where the red poses are the predicted poses from the LSTM architecture and the green poses are the ground truth, which is in our case the real-true positions from the training data. 
+For the prediction, 50 source frames are feed into the model. The model predicts the first next step using the last feed frame and continuous afterwards using the predicted frame as the input for the next prediction until frame 25. The process is shown in Figure \ref{fig:prediction}.
 
 \begin{figure}[h!]
 	\includegraphics[width=8cm]{Training_architecture.PNG}
 	\caption{Training architecture}
 	\label{fig:training}
 \end{figure}
-
-
-\subsection{Experiment}
-
-Best result with ensemble of LSTM that differ in their random initialization and in the random order or minibatches.
-
-The loss function we used was the mean squared error function (L2 loss) to calculate the prediction error for the training sequence. Other distance functions, like the cosine loss, did not improve the performance of the model on the validation set or even gave worse results. 
-
-To solve the optimization problem in the training process, we used stochastic gradient descent (SGD) and the ADAM optimizer. Also here, changing to another optimizer or adjusting the settings, such as epsilon, would not improve our model performance. We clipped the gradient norm to a factor of 5, so that we limit the magnitude of the gradients. With such a configuration, the Adam optimizer descends indeed to a minimum.
 
 \begin{figure}[h!]
 	\includegraphics[width=8cm]{Prediciton_achitecture.PNG}
@@ -53,11 +45,26 @@ To solve the optimization problem in the training process, we used stochastic gr
 \end{figure}
 
 
-In the following table the parameters of the LSTM architecture are summarized. The training progress show us that after 10 epochs there was no substantial decrease in validation error. To avoid overfitting, our final submission is with 6 epochs. A small batch size can help to step away from local minima. In our best run, we had a batch size of 10. 
+For language translation it was shown that deep LSTM's significantly outperform shallow LSTMs \cite{Sutskever2014}. An optimum was reached with a sequence to sequence architecture with 4 layers. Stacking of LSTM cells increases the model complexity and predictive power but at the expense of training times and difficulties. We combined the LSTM cell with a drop-out and stacked those. Dropout was added as it makes models in general more robust.
+
+\subsection{Experiments}
+
+Our models are trained on 162 samples with different length. Each sample is a dictionary with an array with 3x25 entries for the joint angles per frame, the action label and the id's. The validation was done on a separate set of 18 samples. For training and validation set together, there were 12 samples of 14 different activities. All the samples are cut at a maximum sequence length and shorter sequences padded with zeros. The test set consists of 516 samples with 50 frames each.
+
+The loss function we used was the mean squared error function (L2 loss) to calculate the prediction error for the training sequence. As comparison, we also tested another distance function, the cosine loss. 
+
+To solve the optimization problem in the training process, we used stochastic gradient descent (SGD). For the optimizer, there are different choices: the ADAM optimizer, the ... and the ... Moreover, the parameters of the optimizer can be tuned as well. 
+
+Parameters than can be tuned:
+
+
+\section{Results and Discussion}
+
+The best performing model was the most basic LSTM model with one layer, trained with the L2 loss and optimized with the Adam Optimizer. We clipped the gradient norm to a factor of 5, so that we limit the magnitude of the gradients. With such a configuration, the Adam optimizer descends indeed to a minimum. In the following table the parameters of the LSTM architecture are summarized. The training progress shows that after 10 epochs there was no substantial decrease in validation error. To avoid overfitting, our final submission is with 6 epochs. A small batch size can help to step away from local minima. In our best run, we had a batch size of 10. 
 
 \begin{table}[]
 	\centering
-	\caption{Value of the Parameters }
+	\caption{Parameters for our best performing model }
 	\label{my-label}
 	\begin{tabular}{cc}
 		Parameter& Value \\
@@ -69,28 +76,22 @@ In the following table the parameters of the LSTM architecture are summarized. T
 		Epochs  & 9 \\
 		Max Length size  &  600 \\
 		Clipping gradient &  5\\
+		Layer & 1 \\
 		\hline
 	\end{tabular}
 \end{table}
 
-Figure \ref{fig:training}
+Adding more layers would not yield better results compared to a single layer. It is well possible that we couldn't find the convergence point for this model. Neither did it help to add a drop-out layer. Dropout is more useful for deep networks, which can be the reason that dropout would not improve our validation error, even after 12 epochs, for our rather shallow networks. The predictions were very human like, also for the longer term prediction, but they were flickering or noisy. Even though in this model we could not see an improvement, we believe that both stacking of more layers and dropout could increase model performance and add robustness to the model if another architecture was chosen. 
 
-
-
-\subsection{Failed approach}
-
-For language translation it was shown that deep LSTM's significantly outperform shallow LSTMs \cite{Sutskever2014}. An optimum was reached with a sequence to sequence architecture at 4 layers. 
-
-Stacking of LSTM cells increases the model complexity and predictive power but at the expense of training times and difficulties. We combined the LSTM cell with a drop-out and stacked those. Dropout was added as it makes models in general more robust. Dropout is more useful for deep networks, which can be the reason that dropout would not improve our validation error, even after 12 epochs. 
-It is well possible that we couldn't find the convergence point for this model, however, it would not perform better than our single layer LSTM architecture. The predictions were in the rough form very human like, also for the longer term prediction, but they were flickering or noisy.
-
-Even though in this model we could not see an improvement,we belive however, that both stacking of more layers and dropout could increase model performance and add robustness to the model if another architecture was chosen. 
-
+Other distance functions, like the cosine loss, did not improve the performance of the model on the validation set and instead the results were poorer. As well for the optimizer, changing to another optimizer or adjusting the settings, such as epsilon, would not improve our model performance. 
 
 \section{Conclusion and Outlook}
 Our network performed reasonably well for its simplicity. Tuning the hyper-parameters, optimizer or loss function would not have a significant influence on the performance. Adding more layers and dropout could not improve the model. This is in line what we could expect when consulting the literature. 
 
 The movements of human body are sequential, meaning in each frame there is a dependency from the previous. Therefore, the obvious architecture that is outperforming the LSTM network is a sequence to sequence (seq2seq) architecture, where two networks are trained: an encoder generates an internal representation of the input, which is fed to the decoder. The decoder produces a maximum likelhood estimation for the prediction. One of the obvious advantages is that  the model is trained for exactly the task that it should carry out in the test. As the seq2seq architecture is heavily used in machine translation, there are several options to improve the architecture also for motion prediction, such as attention or bidirectional architectures. 
+
+Other distance functions, like the cosine loss, did not improve the performance of the model on the validation set or even gave worse results. 
+
 
 Another preprocessing step would be to add Gaussian noise to the angles as has been done in previous work \cite{Fragkiadaki2014}. This makes the LSTM more robust and can help to avoid overfitting. However, the robustness comes with the price of having another hyperparameter to tune: the standard deviation of the Gaussian noise. Another solution to increase robustness of the model is to feed into the decoder its own produced samples. This comes without any parameter to tune and yields good results \cite{Martinez2017}.
 

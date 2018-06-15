@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.30)  15 JUN 2018 11:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.30)  15 JUN 2018 12:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -993,38 +993,41 @@ Package hyperref Warning: Option `pdfdisplaydoctitle' has already been used,
 Package natbib Warning: Citation `Ghosh2017' on page 1 undefined on input line 
 19.
 
-<Training_architecture.PNG, id=62, 892.08281pt x 507.39563pt>
+<Training_architecture.PNG, id=63, 892.08281pt x 507.39563pt>
 File: Training_architecture.PNG Graphic file (type png)
 <use Training_architecture.PNG>
-Package pdftex.def Info: Training_architecture.PNG  used on input line 35.
+Package pdftex.def Info: Training_architecture.PNG  used on input line 36.
 (pdftex.def)             Requested size: 227.62204pt x 129.46547pt.
+<Prediciton_achitecture.PNG, id=65, 875.52094pt x 452.4403pt>
+File: Prediciton_achitecture.PNG Graphic file (type png)
+<use Prediciton_achitecture.PNG>
+Package pdftex.def Info: Prediciton_achitecture.PNG  used on input line 42.
+(pdftex.def)             Requested size: 227.62204pt x 117.6248pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
 [1.1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
  <./Training_architecture.PNG>]
-<Prediciton_achitecture.PNG, id=79, 875.52094pt x 452.4403pt>
-File: Prediciton_achitecture.PNG Graphic file (type png)
-<use Prediciton_achitecture.PNG>
-Package pdftex.def Info: Prediciton_achitecture.PNG  used on input line 50.
-(pdftex.def)             Requested size: 227.62204pt x 117.6248pt.
-
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 58.
+               Default added (so using `tbp') on input line 65.
 
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 62.
-Processing 'acks' comment.
+(Font)              scaled to size 9.0pt on input line 69.
+LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
+(Font)              scaled to size 9.0pt on input line 99.
+[2.2 <./Prediciton_achitecture.PNG>] Processing 'acks' comment.
 \openout4 = `comment.cut'.
 
- Comment 'acks' writing to comment.cut.
-Straight input of comment.cut. (./comment.cut)) (./mp-report.bbl
+
+Comment 'acks' writing to comment.cut. Straight input of comment.cut.
+(./comment.cut)) (./mp-report.bbl
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 7.0pt on input line 48.
 LaTeX Info: Redefining \tempurl on input line 69.
 LaTeX Info: Redefining \tempurl on input line 93.
-LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 100.
- [2.2 <./Prediciton_achitecture.PNG>])
+)
 
 Package natbib Warning: There were undefined citations.
 
@@ -1037,20 +1040,20 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 29.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 29.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 29.
 Package rerunfilecheck Info: File `mp-report.out' has not changed.
-(rerunfilecheck)             Checksum: 9191938CDC3057299BA55F3B613DBBB9;1777.
+(rerunfilecheck)             Checksum: 3EF74E2092D59FF3FF9A203AD092DCD1;1796.
  )
 (\end occurred inside a group at level 1)
 
 ### semi simple group (level 1) entered at line 22 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 17765 strings out of 492982
- 265961 string characters out of 6134896
- 381472 words of memory out of 5000000
+ 17771 strings out of 492982
+ 266101 string characters out of 6134896
+ 380489 words of memory out of 5000000
  20687 multiletter control sequences out of 15000+600000
- 92422 words of font info for 165 fonts, out of 8000000 for 9000
+ 92968 words of font info for 169 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 60i,12n,94p,1102b,653s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,11n,94p,1102b,493s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_7
 grukw.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.
 enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}{/
@@ -1060,7 +1063,7 @@ e/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb>
-Output written on mp-report.pdf (3 pages, 431228 bytes).
+Output written on mp-report.pdf (3 pages, 432033 bytes).
 PDF statistics:
  139 PDF objects out of 1000 (max. 8388607)
  115 compressed objects within 2 object streams
