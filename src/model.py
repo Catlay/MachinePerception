@@ -72,11 +72,8 @@ class BasicLSTMModel(object):
         #******************************************************************
         with tf.variable_scope('rnn_model', reuse=self.reuse):
 
-            cell = tf.contrib.rnn.GRUCell( self.config['hidden_states'] )
-            cell = tf.contrib.rnn.MultiRNNCell( 
-                [tf.contrib.rnn.GRUCell(self.config['hidden_states']) for _ in range(self.config['num_layers'] )])
-
             lstm = tf.contrib.rnn.BasicLSTMCell(self.config['hidden_states'])
+            cell = rnn_cell_extensions.ResidualWrapper( lstm )
             outputs_all = []
          
             state = self.state_1, self.state_2
@@ -87,7 +84,7 @@ class BasicLSTMModel(object):
               #print(i)
               if i>0:
                tf.get_variable_scope().reuse_variables()
-              output, state = lstm(self.input_[:,i,:],state)
+              output, state = cell(self.input_[:,i,:],state)
               print('RAW ouput',tf.convert_to_tensor(output).get_shape())
               outputs_all.append(output)
             print('shape outputs all: ', output.get_shape())

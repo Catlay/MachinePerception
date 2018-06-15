@@ -59,7 +59,7 @@ To solve the optimization problem in the training process, we used stochastic gr
 
 
 
-In the following table the parameters of the LSTM architecture are summarized. The training progress show us that after 10 epochs there was not substantial decrease in validation error. To avoid overfitting, our final submission is with 9 epochs.
+In the following table the parameters of the LSTM architecture are summarized. The training progress show us that after 10 epochs there was no substantial decrease in validation error. To avoid overfitting, our final submission is with 6 epochs. A small batch size can help to step away from local minima. In our best run, we had a batch size of 10. 
 
 \begin{table}[]
 	\centering
@@ -104,25 +104,13 @@ To sum up, one improvement that is suggested is to use sequential models for the
 
 Another preprocessing step would be to add Gaussian noise to the angles as has been done in previous work \cite{Fragkiadaki2014}. This makes the LSTM more robust and can help to avoid overfitting. However, the robustness comes with the price of having another hyperparameter to tune: the standard deviation of the Gaussian noise. Another solution to increase robustness of the model is to feed into the decoder its own produced samples. This comes without any parameter to tune and yields good results \cite{Martinez2017}.
 
-Human motion is dynamic and not static and human motion can be better expressed in velocities than in positions. Previous work has taken this into account and used a residual connection to have the first frame prediction continuous \cite{Martinez2017} as many architecture suffer from a unreasonable first step when the prediction starts. 
+Human motion is dynamic and not static and human motion can be better expressed in velocities than in positions. Previous work has taken this into account and used a residual connection to have the prediction continuous \cite{Martinez2017}. Many architectures suffer from a unreasonable first step when the prediction starts which can be avoided with the residual connection. A add-on to this model could include a further connection from the last input to the output that would teach the model about acceleration too. 
 
-Going one step ahead would be to feed into the model the 
+Another interesting improvement could be to use an Adversarial network to produce many more samples. 
 
-Predicting only what has been seen \\
+Include a physical model. As humans we train the internal physical model every day by moving our own body.
 
-Adversarial network to check how human-like motion is and generating in the first place only such movements.
-
- 
-
-
- \begin{enumerate}
-	\item Standardization
-	\item One-hot encoding
-	\item One to multilayer LSTM
-	\item With /without dropout
-	\item Seq2Seq model
-	\item Human motion is dynamic. I would love to use velocity and acceleration in the model. But this is probably too hard to do.
- \end{enumerate}
+	
 
 \begin{acks}
 	The authors would like to thank Prof. Dr. Otmar Hilliges for providing the theoretical background needed for this work and his assistants for the skeleton code that allowed us to focus on the more interesting aspects of the task.
