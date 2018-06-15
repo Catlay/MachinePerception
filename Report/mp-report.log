@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.30)  15 JUN 2018 12:27
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.30)  15 JUN 2018 13:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1011,12 +1011,12 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
  <./Training_architecture.PNG>]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 65.
+               Default added (so using `tbp') on input line 63.
 
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 69.
+(Font)              scaled to size 9.0pt on input line 67.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 99.
+(Font)              scaled to size 9.0pt on input line 97.
 [2.2 <./Prediciton_achitecture.PNG>] Processing 'acks' comment.
 \openout4 = `comment.cut'.
 
@@ -1063,7 +1063,7 @@ e/texlive/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb>
-Output written on mp-report.pdf (3 pages, 432109 bytes).
+Output written on mp-report.pdf (3 pages, 432080 bytes).
 PDF statistics:
  139 PDF objects out of 1000 (max. 8388607)
  115 compressed objects within 2 object streams
